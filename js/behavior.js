@@ -7,7 +7,7 @@ function download( after, limit, callback ) {
     console.log( 'Loading new page after ' + after );
     downloading = true;
     $.get( 'feed.php', {
-        r: 'funny',
+        r: document.body.id.split( '_' )[ 1 ],
         after: after,
         limit: limit
     }, function( feed ) {
@@ -30,19 +30,28 @@ function prev() {
     }
     update( prev, false );
 }
-function isImage( url ) {
+function getImage( url ) {
     switch ( url.substr( -4 ).toLowerCase() ) {
         case '.gif':
         case '.jpg':
         case '.png':
-            return true;
+            return url;
+    }
+    if ( url.substr( 0, 'http://imgur.com'.length ) == 'http://imgur.com' ) {
+        console.log( 'Converted to image: ' + url );
+        return 'http://i.imgur.com/' + url.split( '/' )[ 3 ] + '.jpg';
     }
     return false;
 }
 function process( direction, skipRead ) {
-    if ( !isImage( items[ current ].data.url ) ) {
+    var url = getImage( items[ current ].data.url );
+
+    if ( url === false ) {
         console.log( 'Skipping non-image ' + items[ current ].data.url );
         return direction();
+    }
+    else {
+        items[ current ].data.url = url;
     }
     if ( skipRead && isRead( items[ current ].data.name ) ) {
         console.log( 'Skipping read item ' + items[ current ].data.url );

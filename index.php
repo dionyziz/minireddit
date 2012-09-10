@@ -1,11 +1,23 @@
+<?php
+    if ( isset( $_GET[ 'r' ] ) ) {
+        $subreddit = preg_replace( '#[^a-zA-Z0-9_-]+#', '', $_GET[ 'r' ] );
+    }
+    else {
+        $subreddit = 'funny';
+    }
+?>
 <!DOCTYPE html>
 <html>
     <head>
-        <title>/r/funny</title>
+        <title>/r/<?php
+        echo $subreddit;
+        ?></title>
         <link href='css/style.css' rel='stylesheet' />
         <link rel='icon' type='image/png' href='images/grin.png' />
     </head>
-    <body>
+    <body id='r_<?php
+        echo $subreddit;
+        ?>'>
         <h2></h2>
         <img src='' id='img' />
         <img src='images/ajax-loader.gif' id='loading' />
