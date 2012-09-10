@@ -1,0 +1,143 @@
+var items = [], current = -1, downloading = false;
+
+function download( after, limit, callback ) {
+    if ( downloading ) {
+        return;
+    }
+    console.log( 'Loading new page after ' + after );
+    downloading = true;
+    $.get( 'feed.php', {
+        r: 'funny',
+        after: after,
+        limit: limit
+    }, function( feed ) {
+        downloading = false;
+        items.push.apply( items, feed.data.children );
+        callback();
+    }, 'json' );
+}
+function next() {
+    if ( downloading ) { 
+        return;
+    }
+    ++current;
+    update( next, true );
+}
+function prev() {
+    --current;
+    if ( current < 0 ) {
+        current = 0;
+    }
+    update( prev, false );
+}
+function isImage( url ) {
+    switch ( url.substr( -4 ).toLowerCase() ) {
+        case '.gif':
+        case '.jpg':
+        case '.png':
+            return true;
+    }
+    return false;
+}
+function process( direction, skipRead ) {
+    if ( !isImage( items[ current ].data.url ) ) {
+        console.log( 'Skipping non-image ' + items[ current ].data.url );
+        return direction();
+    }
+    if ( skipRead && isRead( items[ current ].data.name ) ) {
+        console.log( 'Skipping read item ' + items[ current ].data.url );
+        return direction();
+    }
+    return render();
+}
+function update( direction, skipRead ) {
+    if ( items.length <= current ) {
+        var after = '';
+
+        if ( items.length ) {
+            after = items[ items.length - 1 ].data.name;
+        }
+        download( after, 25, function () {
+            process( direction, skipRead );
+        } );
+    }
+    else {
+        process( direction, skipRead );
+    }
+}
+
+var loadWait = false;
+
+function render() {
+    var item = items[ current ].data;
+    $( '#img' ).hide();
+    $( '#img' )[ 0 ].src = item.url;
+    $( 'h2' ).text( item.title );
+    loadWait = setTimeout( function() {
+        $( '#loading' ).fadeIn();
+    }, 500 );
+}
+
+$( '#img' ).load( function() {
+    clearTimeout( loadWait );
+    $( '#loading' ).hide();
+    $( '#img' ).show();
+    markAsRead( items[ current ].data.name );
+} );
+
+loadStorage();
+next();
+
+$( window ).keydown( function( e ) {
+    switch ( e.keyCode ) {
+        case 74: // j
+            $( 'div' ).fadeOut();
+            next();
+            break;
+        case 75: // k
+            prev();
+            break;
+    }
+} );
+$( '#img' ).click( next );
+$( 'div' ).click( function() {
+    $( this ).fadeOut();
+} );
+
+var read;
+
+function isRead( name ) {
+    // console.log( 'Checking if "' + name + '" is read' );
+    // console.log( read );
+    return typeof read[ name ] !== 'undefined';
+}
+function markAsRead( name ) {
+    // console.log( 'Marking ' + name + ' as read.' );
+    read[ name ] = true;
+    saveStorage();
+}
+function saveStorage() {
+    if ( typeof( localStorage ) !== 'undefined' ) {
+        // console.log( 'Saving to storage.' );
+        localStorage.read = JSON.stringify( read );
+    }
+}
+function loadStorage() {
+    if ( typeof( localStorage ) !== 'undefined' ) {
+        console.log( 'Local storage is supported' );
+    }
+    else {
+        console.log( 'Local storage is not supported' );
+        return;
+    }
+
+    if ( typeof localStorage.read === 'undefined' ) {
+        console.log( 'Storage is empty.' );
+        localStorage.read = '{}';
+    }
+    else {
+        console.log( 'Loading from storage: ' );
+    }
+    read = JSON.parse( localStorage.read );
+    console.log( read );
+}

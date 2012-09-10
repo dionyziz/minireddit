@@ -1,0 +1,35 @@
+body {
+    font-family: "Trebuchet MS", Verdana, sans-serif;
+}
+h2 {
+    font-size: 18pt;
+    font-weight: normal;
+    text-align: center;
+}
+img {
+    display: block;
+    margin: auto;
+    max-width: 800px;
+}
+#img {
+    cursor: pointer;
+}
+div {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #ccc;
+    padding: 5px;
+    text-align: center;
+    border-top: #666;
+    box-shadow: 0 0 1px rgba( 0, 0, 0, 0.5 );
+}
+div span {
+    border: 1px solid #666;
+    padding: 3px 5px;
+    font-family: courier, fixed;
+    border-radius: 5px;
+    box-shadow: 0 0 1px black;
+    background-color: white;
+}
