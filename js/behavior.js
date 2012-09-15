@@ -39,7 +39,7 @@ function getImage( url ) {
     }
     if ( url.substr( 0, 'http://imgur.com'.length ) == 'http://imgur.com' ) {
         console.log( 'Converted to image: ' + url );
-        return 'http://i.imgur.com/' + url.split( '/' )[ 3 ] + '.jpg';
+        return 'imgur.php?url=' + encodeURIComponent( url );
     }
     return false;
 }
