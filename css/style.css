@@ -1,5 +1,8 @@
 body {
     font-family: "Trebuchet MS", Verdana, sans-serif;
+    background-color: #ebebeb;
+    background-image: url( 'https://s.ytimg.com/yt/img/refresh/body_noise-vflp89Uii.png' );
+    background-repeat: repeat;
 }
 h2 {
     font-size: 18pt;
@@ -14,7 +17,7 @@ img {
 #img {
     cursor: pointer;
 }
-div {
+.instructions {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -25,11 +28,14 @@ div {
     border-top: #666;
     box-shadow: 0 0 1px rgba( 0, 0, 0, 0.5 );
 }
-div span {
+.instructions span {
     border: 1px solid #666;
     padding: 3px 5px;
     font-family: courier, fixed;
     border-radius: 5px;
     box-shadow: 0 0 1px black;
     background-color: white;
+}
+div.info {
+    position: absolute;
 }

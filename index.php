@@ -20,12 +20,15 @@
         ?>'>
         <h2></h2>
         <img src='' id='img' />
-        <img src='images/ajax-loader.gif' id='loading' />
-        <div>
+        <img src='images/bouncing-ball.gif' id='loading' />
+        <div class='instructions'>
             Press <span>j</span> to go to the next image.
         </div>
         <script src='http://code.jquery.com/jquery-1.8.1.min.js'></script>
         <script src='js/json2.js'></script>
         <script src='js/behavior.js'></script>
+        <div class='info'>
+            <a href=''>i</a>
+        </div>
     </body>
 </html>
