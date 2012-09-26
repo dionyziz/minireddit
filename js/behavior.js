@@ -39,7 +39,7 @@ function getImage( url ) {
     }
     if ( url.substr( 0, 'http://imgur.com'.length ) == 'http://imgur.com' ) {
         console.log( 'Converted to image: ' + url );
-        return 'imgur.php?url=' + encodeURIComponent( url );
+        return 'imgur.php?url=' + encodeURIComponent( url ) + '&type=.jpg';
     }
     return false;
 }
@@ -113,12 +113,12 @@ $( 'div' ).click( function() {
     $( this ).fadeOut();
 } );
 
-var read;
+var read, localRead;
 
 function isRead( name ) {
     // console.log( 'Checking if "' + name + '" is read' );
     // console.log( read );
-    return typeof read[ name ] !== 'undefined';
+    return typeof localRead[ name ] !== 'undefined';
 }
 function markAsRead( name ) {
     // console.log( 'Marking ' + name + ' as read.' );
@@ -148,5 +148,6 @@ function loadStorage() {
         console.log( 'Loading from storage: ' );
     }
     read = JSON.parse( localStorage.read );
+    localRead = JSON.parse( localStorage.read );
     console.log( read );
 }

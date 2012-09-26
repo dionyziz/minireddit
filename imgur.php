@@ -40,9 +40,13 @@
         $end = strpos( $src, '"', $start );
 
         $imgURL = substr( $src, $start, $end - $start );
+        // imgur uses ?1 etc. to force uncache in cases of update -- strip that if it exists
+        $imgRequest = explode( '?', $imgURL );
+        $imgURL = $imgRequest[ 0 ];
+
         $type = strtolower( substr( $imgURL, -3 ) );
 
-        if ( !preg_match( '#^http\\://.*(jpg|png)$#', $imgURL ) ) {
+        if ( !preg_match( '#^http\\://.*(jpg|png|gif)$#', $imgURL ) ) {
             echo "The image source '" . htmlspecialchars( $imgURL ) . "' is not jpg or png.\n";
             return;
         }
