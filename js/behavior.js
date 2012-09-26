@@ -1,4 +1,17 @@
+document.getElementById( 'settings' ).onclick = function( e ) {
+    $( '.bubble' ).toggle();
+    e.stopPropagation();
+    return false;
+};
+document.onclick = function() {
+    $( '.bubble' ).hide();
+};
+$( '.bubble' ).click( function( e ) {
+    e.stopPropagation();
+} );
+
 var items = [], current = -1, downloading = false;
+var subreddit = document.body.id.split( '_' )[ 1 ];
 
 function download( after, limit, callback ) {
     if ( downloading ) {
@@ -7,7 +20,7 @@ function download( after, limit, callback ) {
     console.log( 'Loading new page after ' + after );
     downloading = true;
     $.get( 'feed.php', {
-        r: document.body.id.split( '_' )[ 1 ],
+        r: subreddit,
         after: after,
         limit: limit
     }, function( feed ) {
@@ -82,6 +95,7 @@ function render() {
     $( '#img' ).hide();
     $( '#img' )[ 0 ].src = item.url;
     $( 'h2' ).text( item.title );
+    $( '.reddit' )[ 0 ].href = 'http://reddit.com' + item.permalink;
     loadWait = setTimeout( function() {
         $( '#loading' ).fadeIn();
     }, 500 );
@@ -100,7 +114,8 @@ next();
 $( window ).keydown( function( e ) {
     switch ( e.keyCode ) {
         case 74: // j
-            $( 'div' ).fadeOut();
+            $( '.instructions' ).fadeOut();
+            localStorage.instructions = 'read';
             next();
             break;
         case 75: // k
@@ -109,8 +124,14 @@ $( window ).keydown( function( e ) {
     }
 } );
 $( '#img' ).click( next );
-$( 'div' ).click( function() {
+
+if ( localStorage.instructions == 'read' ) {
+    $( '.instructions' ).hide();
+}
+
+$( '.instructions' ).click( function() {
     $( this ).fadeOut();
+    localStorage.instructions = 'read';
 } );
 
 var read, localRead;

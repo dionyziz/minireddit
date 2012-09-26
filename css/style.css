@@ -19,6 +19,7 @@ img {
 }
 .instructions {
     position: fixed;
+    z-index: 3;
     bottom: 0;
     left: 0;
     right: 0;
@@ -36,6 +37,71 @@ img {
     box-shadow: 0 0 1px black;
     background-color: white;
 }
-div.info {
+.info {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+    padding: 5px 13px;
+    list-style: none;
+    z-index: 2;
+}
+.info li {
+    float: right;
+    display: block;
+    padding: 0;
+    margin: 0;
+}
+.info a {
+    padding: 5px 0px 5px 8px;
+    display: block;
+    opacity: 0.5;
+}
+.info a:hover {
+    opacity: 1;
+}
+.bubble {
+    position: fixed;
+    bottom: 38px;
+    right: 4px;
+    background-color: #333;
+    width: 300px;
+    z-index: 3;
+    border-radius: 3px;
+    color: white;
+    padding: 10px;
+    font-size: 90%;
+    box-shadow: 0 0 5px 3px rgba( 255, 255, 255, 0.5 );
+    display: none;
+}
+.bubble a {
+    color: #a8cff3;
+}
+.bubble ul {
+    margin: 10px 0;
+    padding: 0;
+    list-style: none;
+}
+.selected a {
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+}
+.bubble:after {
+    content: "▼";
+    display: block;
+    position: fixed;
+    bottom: 25px;
+    right: 14px;
+    color: #333;
+}
+.bubble a.developers {
+    font: 1.5em serif;
+    float: right;
+    color: white;
+    text-decoration: none;
     position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 10px;
 }
