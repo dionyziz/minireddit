@@ -34,14 +34,14 @@ function next() {
         return;
     }
     ++current;
-    update( next, true );
+    update( next );
 }
 function prev() {
     --current;
     if ( current < 0 ) {
         current = 0;
     }
-    update( prev, false );
+    update( prev );
 }
 
 String.prototype.beginsWith = function( str ) {
@@ -63,7 +63,7 @@ function getImage( url ) {
     }
     return false;
 }
-function process( direction, skipRead ) {
+function process( direction ) {
     var url = getImage( items[ current ].data.url );
 
     if ( url === false ) {
@@ -73,13 +73,13 @@ function process( direction, skipRead ) {
     else {
         items[ current ].data.url = url;
     }
-    if ( skipRead && isRead( items[ current ].data.name ) ) {
+    if ( isRead( items[ current ].data.name ) ) {
         console.log( 'Skipping read item ' + items[ current ].data.url );
         return direction();
     }
     return render();
 }
-function update( direction, skipRead ) {
+function update( direction ) {
     if ( items.length <= current ) {
         var after = '';
 
@@ -87,11 +87,11 @@ function update( direction, skipRead ) {
             after = items[ items.length - 1 ].data.name;
         }
         download( after, 25, function () {
-            process( direction, skipRead );
+            process( direction );
         } );
     }
     else {
-        process( direction, skipRead );
+        process( direction );
     }
 }
 
