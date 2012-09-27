@@ -12,6 +12,7 @@ $( '.bubble' ).click( function( e ) {
 
 var items = [], current = -1, downloading = false;
 var subreddit = document.body.id.split( '_' )[ 1 ];
+var first = -1;
 
 function download( after, limit, callback ) {
     if ( downloading ) {
@@ -38,8 +39,8 @@ function next() {
 }
 function prev() {
     --current;
-    if ( current < 0 ) {
-        current = 0;
+    if ( current < first ) {
+        current = first;
     }
     update( prev );
 }
@@ -76,6 +77,9 @@ function process( direction ) {
     if ( isRead( items[ current ].data.name ) ) {
         console.log( 'Skipping read item ' + items[ current ].data.url );
         return direction();
+    }
+    if ( first == -1 ) {
+        first = current;
     }
     return render();
 }
