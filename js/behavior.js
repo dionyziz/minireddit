@@ -43,6 +43,11 @@ function prev() {
     }
     update( prev, false );
 }
+
+String.prototype.beginsWith = function( str ) {
+    return this.substr( 0, str.length ) == str;
+};
+
 function getImage( url ) {
     switch ( url.substr( -4 ).toLowerCase() ) {
         case '.gif':
@@ -50,7 +55,9 @@ function getImage( url ) {
         case '.png':
             return url;
     }
-    if ( url.substr( 0, 'http://imgur.com'.length ) == 'http://imgur.com' ) {
+    if ( url.beginsWith( 'http://imgur.com' )
+      || url.beginsWith( 'http://quickmeme.com' )
+      || url.beginsWith( 'http://qkme.me' ) ) {
         console.log( 'Converted to image: ' + url );
         return 'imgur.php?url=' + encodeURIComponent( url ) + '&type=.jpg';
     }
