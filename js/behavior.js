@@ -105,7 +105,10 @@ function render() {
     var item = items[ current ].data;
     $( '#img' ).hide();
     $( '#img' )[ 0 ].src = item.url;
-    $( 'h2' ).text( item.title );
+
+    // this intentionally left unescaped; reddit sends this including HTML entities that must be rendered correctly
+    // we trust reddit to do the escaping correctly
+    $( 'h2' ).html( item.title );
     $( '.reddit' )[ 0 ].href = 'http://reddit.com' + item.permalink;
     loadWait = setTimeout( function() {
         $( '#loading' ).fadeIn();

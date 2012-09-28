@@ -47,7 +47,7 @@
                     }
                 ?>
             </ul>
-            <a href='https://github.com/dionyziz/funny' class='developers' title='Fork me on GitHub' target='_blank'><img src='images/github_icon.png' alt='GitHub' /></a>
+            <a href='https://github.com/dionyziz/minireddit' class='developers' title='Fork me on GitHub' target='_blank'><img src='images/github_icon.png' alt='GitHub' /></a>
         </div>
         <ul class='info'>
             <li><a href='' id='settings'><img src='images/settings.png' alt='Settings' /></a></li>
