@@ -14,6 +14,24 @@ var items = [], current = -1, downloading = false;
 var subreddit = document.body.id.split( '_' )[ 1 ];
 var first = -1;
 
+function loadPost( name ) {
+    if ( downloading ) {
+        return;
+    }
+    console.log( 'Loading post ' + name );
+    downloading = true;
+    $.get( 'post.php', {
+        name: name
+    }, function( post ) {
+        downloading = false;
+
+        items.splice( current + 1, 0, post.data.children[ 0 ] );
+        ++current;
+        localRead[ name ] = undefined;
+        process( next );
+    }, 'json' );
+}
+
 function download( after, limit, callback ) {
     if ( downloading ) {
         return;
@@ -66,6 +84,7 @@ function getImage( url ) {
 }
 function process( direction ) {
     var url = getImage( items[ current ].data.url );
+    var args = window.location.href.split( '#' );
 
     if ( url === false ) {
         console.log( 'Skipping non-image ' + items[ current ].data.url );
@@ -78,9 +97,19 @@ function process( direction ) {
         console.log( 'Skipping read item ' + items[ current ].data.url );
         return direction();
     }
+
     if ( first == -1 ) {
         first = current;
     }
+
+    if ( args.length > 1 ) {
+        args[ 1 ] = items[ current ].data.name;
+        window.location.href = args.join( '#' );
+    }
+    else {
+        window.location.href += '#' + items[ current ].data.name;
+    }
+
     return render();
 }
 function update( direction ) {
@@ -123,7 +152,14 @@ $( '#img' ).load( function() {
 } );
 
 loadStorage();
-next();
+
+var args = window.location.href.split( '#' );
+if ( args.length > 1 ) {
+    loadPost( args[ 1 ] );
+}
+else {
+    next();
+}
 
 $( window ).keydown( function( e ) {
     switch ( e.keyCode ) {
