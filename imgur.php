@@ -16,7 +16,10 @@
     }
 
     function safeRead( $url ) {
-        $handle = fopen( $url, 'r' );
+        $handle = @fopen( $url, 'r' );
+        if ( $handle === false ) {
+            return error( 'Remove server looks down. Could not fetch url "' . $url . '".' );
+        }
         $buffer = '';
         $size = 0;
         while ( $block = fread( $handle, BLOCK_SIZE ) ) {
@@ -37,7 +40,16 @@
             if ( $imageContainerPos === false ) {
                 $imageContainerPos = strpos( $src, 'id="content"' );
                 if ( $imageContainerPos === false ) {
-                    return error( "No 'image-container' or 'content' div found." );
+                    $imageobj = imagecreatefromstring( $src );
+
+                    if ( $imageobj === false ) {
+                        return error( "No 'image-container' or 'content' div found." );
+                    }
+                    else {
+                        header( 'Content-Type: image/jpg' );
+                        imagejpeg( $imageobj );
+                        return;
+                    }
                 }
             }
             $srcPos = strpos( $src, 'src=', $imageContainerPos );
@@ -66,7 +78,7 @@
         }
 
         if ( !preg_match( '#^http\\://.*(jpg|png|gif)$#', $imgURL ) ) {
-            return error( "The image source '" . htmlspecialchars( $imgURL ) . "' is not jpg, gif or png.\n" );
+            return error( "The image source '" . $imgURL . "' is not jpg, gif or png." );
         }
         $type = strtolower( substr( $imgURL, -3 ) );
         header( 'Content-Type: image/' . $type );
