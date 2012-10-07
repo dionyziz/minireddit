@@ -44,8 +44,19 @@ function download( after, limit, callback ) {
         limit: limit
     }, function( feed ) {
         downloading = false;
+        var prevlength = items.length;
         items.push.apply( items, feed.data.children );
-        callback();
+        var newlength = items.length;
+
+        if ( prevlength == newlength ) {
+            // we ran out of pages
+            console.log( 'End of subreddit.' );
+            $( '#img' ).hide();
+            $( 'h2' ).html( '<em>This subreddit has no more content.</em>' );
+        }
+        else {
+            callback();
+        }
     }, 'json' );
 }
 function next() {
