@@ -13,12 +13,12 @@ URLs are copiable and shareable via IM or e-mail directly.
 
 Credits
 =======
-**minireddit** was created by Dionysis "dionyziz" Zindros <dionyziz@gmail.com>.
+**minireddit** was created by Dionysis "dionyziz" Zindros &lt;dionyziz@gmail.com&gt;.
 Contributors include:
 
- * [Kostis "gtklocker" Karantias](https://github.com/gtklocker) <karantiaskostis@gmail.com>
- * [Mario Saldinger](https://github.com/mariosal) <mariosaldinger@gmail.com>
+ * [Kostis "gtklocker" Karantias](https://github.com/gtklocker) &lt;karantiaskostis@gmail.com&gt;
+ * [Mario Saldinger](https://github.com/mariosal) &lt;mariosaldinger@gmail.com&gt;
 
 License
 =======
-**minireddit** is liensed under the MIT license. See the file LICENSE for more information.
+**minireddit** is licensed under the MIT license. See the file LICENSE for more information.
