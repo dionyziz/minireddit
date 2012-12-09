@@ -58,6 +58,9 @@ function download( after, limit, callback ) {
             callback();
         }
     }, 'json' );
+    $( '#img' ).hide();
+    $( 'h2' ).html( '<em>Loading more content...</em>' );
+    $( '#loading' ).fadeIn();
 }
 function next() {
     if ( downloading ) { 
