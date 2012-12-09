@@ -32,6 +32,31 @@ function loadPost( name ) {
     }, 'json' );
 }
 
+function preloadContent( items ) {
+    console.log( 'Preloading content for ' + Object.keys( items ).length + ' items' );
+
+    function preloadItem( i ) {
+        if ( i == items.length ) {
+            return;
+        }
+
+        var url = imageFromItem( items[ i ] );
+
+        if ( url !== false ) {
+            console.log( 'Preloading ' + url );
+            var img = new Image();    
+            img.onload = img.onerror = function() {
+                preloadItem( i + 1 );
+            };
+            img.src = url;
+            return;
+        }
+        preloadItem( i + 1 );
+    }
+
+    preloadItem( 0 );
+}
+
 function download( after, limit, callback ) {
     if ( downloading ) {
         return;
@@ -48,6 +73,8 @@ function download( after, limit, callback ) {
         items.push.apply( items, feed.data.children );
         var newlength = items.length;
 
+        preloadContent( feed.data.children );
+
         if ( prevlength == newlength ) {
             // we ran out of pages
             console.log( 'End of subreddit.' );
@@ -59,7 +86,7 @@ function download( after, limit, callback ) {
         }
     }, 'json' );
     $( '#img' ).hide();
-    $( 'h2' ).html( '<em>Loading more content...</em>' );
+    $( 'h2' ).html( '<em>Loading content...</em>' );
     $( '#loading' ).fadeIn();
 }
 function next() {
@@ -96,22 +123,28 @@ function getImage( url ) {
     }
     return false;
 }
-function process( direction ) {
-    var url = getImage( items[ current ].data.url );
-    var args = window.location.href.split( '#' );
+function imageFromItem( item ) {
+    if ( isRead( item.data.name ) ) {
+        console.log( 'Skipping read item ' + items[ current ].data.url );
+        return false;
+    }
+
+    var url = getImage( item.data.url );
 
     if ( url === false ) {
         console.log( 'Skipping non-image ' + items[ current ].data.url );
-        return direction();
+        return false;
     }
-    else {
-        items[ current ].data.url = url;
-    }
-    if ( isRead( items[ current ].data.name ) ) {
-        console.log( 'Skipping read item ' + items[ current ].data.url );
-        return direction();
-    }
+    return url;
+}
+function process( direction ) {
+    var url = imageFromItem( items[ current ] );
+    var args = window.location.href.split( '#' );
 
+    if ( url === false ) {
+        return direction();
+    }
+    items[ current ].data.url = url;
     if ( first == -1 ) {
         first = current;
     }
@@ -123,6 +156,10 @@ function process( direction ) {
     else {
         window.location.href += '#' + items[ current ].data.name;
     }
+
+    $( '#img' ).error( function() {
+        direction();
+    } );
 
     return render();
 }
@@ -158,12 +195,14 @@ function render() {
     }, 500 );
 }
 
-$( '#img' ).load( function() {
+function handleImageLoaded() {
     clearTimeout( loadWait );
     $( '#loading' ).hide();
     $( '#img' ).show();
     markAsRead( items[ current ].data.name );
-} );
+}
+
+$( '#img' ).load( handleImageLoaded );
 
 loadStorage();
 
@@ -206,7 +245,7 @@ function isRead( name ) {
     return typeof localRead[ name ] !== 'undefined';
 }
 function markAsRead( name ) {
-    // console.log( 'Marking ' + name + ' as read.' );
+    console.log( 'Marking ' + name + ' as read.' );
     read[ name ] = true;
     saveStorage();
 }
@@ -234,5 +273,5 @@ function loadStorage() {
     }
     read = JSON.parse( localStorage.read );
     localRead = JSON.parse( localStorage.read );
-    console.log( read );
+    console.log( 'Loaded ' + Object.keys( read ).length + ' read items from storage' );
 }

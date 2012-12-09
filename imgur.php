@@ -15,6 +15,14 @@
         }
     }
 
+    function success() {
+        header( 'Cache-Control: public, max-age:99936000, post-check=3600000, pre-check=3600000' );
+        header( 'Last-Modified: Sun, 06 Nov 2005 15:32:08 GMT' );
+        header( 'ETag: Sun, 06 Nov 2005 15:32:08 GMT' );
+
+        echo ob_get_clean();
+    }
+
     function safeRead( $url ) {
         $handle = @fopen( $url, 'r' );
         if ( $handle === false ) {
@@ -32,6 +40,8 @@
         return $buffer;
     }
 
+    ob_start();
+
     if ( isset( $_GET[ 'url' ] ) ) {
         $url = $_GET[ 'url' ];
         if ( preg_match( '#^http\\://imgur\\.com/.*#', $url ) ) {
@@ -48,7 +58,7 @@
                     else {
                         header( 'Content-Type: image/jpg' );
                         imagejpeg( $imageobj );
-                        return;
+                        return success();
                     }
                 }
             }
@@ -83,6 +93,7 @@
         $type = strtolower( substr( $imgURL, -3 ) );
         header( 'Content-Type: image/' . $type );
         echo safeRead( $imgURL );
+        return success();
     }
     else {
         return error( 'The URL parameter is not set.' );
