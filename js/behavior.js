@@ -70,6 +70,19 @@ function download( after, limit, callback ) {
     }, function( feed ) {
         downloading = false;
         var prevlength = items.length;
+
+        // TODO: Optimize O(n^2) algorithm
+        feed.data.children = feed.data.children.filter( function( item ) {
+            for ( var i = 0; i < items.length; ++i ) {
+                var loadedItem = items[ i ];
+                
+                if ( item.data.id === loadedItem.data.id ) {
+                    console.log( 'Skipping already loaded item', item.data.id );
+                    return false;
+                }
+            }
+            return true;
+        } );
         items.push.apply( items, feed.data.children );
         var newlength = items.length;
 
