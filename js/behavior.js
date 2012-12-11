@@ -199,6 +199,7 @@ function handleImageLoaded() {
     clearTimeout( loadWait );
     $( '#loading' ).hide();
     $( '#img' ).show();
+    // $( '#img' )[ 0 ].height = $( window ).height() - $( '#img' )[ 0 ].offsetTop - 20;
     markAsRead( items[ current ].data.name );
 }
 
