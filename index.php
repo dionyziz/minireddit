@@ -56,5 +56,19 @@
         <script src='http://code.jquery.com/jquery-1.8.1.min.js'></script>
         <script src='js/json2.js'></script>
         <script src='js/behavior.js'></script>
+        <script>
+          var _gaq = [
+              [ '_setAccount', 'UA-37042847-1' ],
+              [ '_trackPageview' ]
+          ];
+
+          ( function() {
+              var ga = document.createElement( 'script' );
+              ga.async = true;
+              ga.src = 'http://www.google-analytics.com/ga.js';
+              var s = document.getElementsByTagName( 'script' )[ 0 ];
+              s.parentNode.insertBefore( ga, s );
+          } )();
+        </script>
     </body>
 </html>
