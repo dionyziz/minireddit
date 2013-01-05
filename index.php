@@ -55,6 +55,7 @@
         </ul>
         <script src='http://code.jquery.com/jquery-1.8.1.min.js'></script>
         <script src='js/json2.js'></script>
+        <script src='js/reddit.js'></script>
         <script src='js/behavior.js'></script>
         <script>
           var _gaq = [

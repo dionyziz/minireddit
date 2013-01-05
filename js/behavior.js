@@ -20,16 +20,14 @@ function loadPost( name ) {
     }
     console.log( 'Loading post ' + name );
     downloading = true;
-    $.get( 'post.php', {
-        name: name
-    }, function( post ) {
+    Reddit.downloadPost( name, function( post ) {
         downloading = false;
 
-        items.splice( current + 1, 0, post.data.children[ 0 ] );
+        items.splice( current + 1, 0, post );
         ++current;
         localRead[ name ] = undefined;
         process( next );
-    }, 'json' );
+    } );
 }
 
 function preloadContent( items ) {
