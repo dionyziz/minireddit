@@ -1,6 +1,6 @@
 <?php
     if ( isset( $_GET[ 'r' ] ) ) {
-        $subreddit = preg_replace( '#[^a-zA-Z]+#', '', $_GET[ 'r' ] );
+        $subreddit = preg_replace( '#[^a-zA-Z+]+#', '', $_GET[ 'r' ] );
     }
     else {
         $subreddit = 'funny';

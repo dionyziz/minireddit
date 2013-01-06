@@ -10,110 +10,79 @@ $( '.bubble' ).click( function( e ) {
     e.stopPropagation();
 } );
 
-var items = [], current = -1, downloading = false;
 var subreddit = document.body.id.split( '_' )[ 1 ];
-var first = -1;
+var channel = new Reddit.Channel( subreddit );
 
 function loadPost( name ) {
-    if ( downloading ) {
-        return;
-    }
     console.log( 'Loading post ' + name );
-    downloading = true;
     Reddit.downloadPost( name, function( post ) {
-        downloading = false;
-
-        items.splice( current + 1, 0, post );
-        ++current;
-        localRead[ name ] = undefined;
-        process( next );
+        process( post, true );
     } );
 }
 
-function preloadContent( items ) {
-    console.log( 'Preloading content for ' + Object.keys( items ).length + ' items' );
+/*
+var preloadQueue = [];
 
-    function preloadItem( i ) {
-        if ( i == items.length ) {
-            return;
-        }
-
-        var url = imageFromItem( items[ i ] );
-
-        if ( url !== false ) {
-            console.log( 'Preloading ' + url );
-            var img = new Image();    
-            img.onload = img.onerror = function() {
-                preloadItem( i + 1 );
-            };
-            img.src = url;
-            return;
-        }
-        preloadItem( i + 1 );
-    }
-
-    preloadItem( 0 );
+function enqueuePreload( post ) {
+    preloadQueue.unshift( post );
 }
+function preloadPostFromQueue() {
+    var post = preloadQueue.shift();
+    var url = imageFromPost( post );
 
-function download( after, limit, callback ) {
-    if ( downloading ) {
+    if ( url !== false ) {
+        console.log( 'Preloading ' + url );
+        var img = new Image();    
+        img.onload = img.onerror = function() {
+            preloadPostFromQueue();
+        };
+        img.src = url;
         return;
     }
-    console.log( 'Loading new page after ' + after );
-    downloading = true;
-    $.get( 'feed.php', {
-        r: subreddit,
-        after: after,
-        limit: limit
-    }, function( feed ) {
-        downloading = false;
-        var prevlength = items.length;
+    preloadPostFromQueue();
+}
+function preloadContent( post ) {
+    console.log( 'Preloading content for post "' + post.title + '"' );
+    enqueuePreload( post );
+}
+*/
 
-        // TODO: Optimize O(n^2) algorithm
-        feed.data.children = feed.data.children.filter( function( item ) {
-            for ( var i = 0; i < items.length; ++i ) {
-                var loadedItem = items[ i ];
-                
-                if ( item.data.id === loadedItem.data.id ) {
-                    console.log( 'Skipping already loaded item', item.data.id );
-                    return false;
-                }
-            }
-            return true;
-        } );
-        items.push.apply( items, feed.data.children );
-        var newlength = items.length;
-
-        preloadContent( feed.data.children );
-
-        if ( prevlength == newlength ) {
-            // we ran out of pages
-            console.log( 'End of subreddit.' );
-            $( '#img' ).hide();
-            $( 'h2' ).html( '<em>This subreddit has no more content.</em>' );
-        }
-        else {
-            callback();
-        }
-    }, 'json' );
+// we ran out of pages
+function endOfChannel() {
+    console.log( 'End of subreddit.' );
     $( '#img' ).hide();
-    $( 'h2' ).html( '<em>Loading content...</em>' );
-    $( '#loading' ).fadeIn();
+    $( 'h2' ).html( '<em>This subreddit has no more content.</em>' );
+}
+
+/*
+$( '#img' ).hide();
+$( 'h2' ).html( '<em>Loading content...</em>' );
+$( '#loading' ).fadeIn();
+*/
+
+var lastMotion;
+var begun = false;
+
+function stopMotion() {
+    next();
+    lastMotion = function() {};
 }
 function next() {
-    if ( downloading ) { 
-        return;
+    lastMotion = next;
+    if ( begun ) {
+        channel.goNext( endOfChannel );
     }
-    ++current;
-    update( next );
+    else {
+        begun = true;
+    }
+    channel.getCurrent( process );
 }
 function prev() {
-    --current;
-    if ( current < first ) {
-        current = first;
-    }
-    update( prev );
+    lastMotion = prev;
+    channel.goPrevious( stopMotion );
+    channel.getCurrent( process );
 }
+lastMotion = next;
 
 String.prototype.beginsWith = function( str ) {
     return this.substr( 0, str.length ) == str;
@@ -134,87 +103,77 @@ function getImage( url ) {
     }
     return false;
 }
-function imageFromItem( item ) {
-    if ( isRead( item.data.name ) ) {
-        console.log( 'Skipping read item ' + items[ current ].data.url );
+function imageFromPost( post, force ) {
+    if ( !force && isRead( post.name ) ) {
+        console.log( 'Skipping read item ' + post.url );
         return false;
     }
 
-    var url = getImage( item.data.url );
+    var url = getImage( post.url );
 
     if ( url === false ) {
-        console.log( 'Skipping non-image ' + items[ current ].data.url );
+        console.log( 'Skipping non-image ' + post.url );
         return false;
     }
     return url;
 }
-function process( direction ) {
-    var url = imageFromItem( items[ current ] );
+function process( post, force ) {
+    if ( typeof force == 'undefined' ) {
+        force = false;
+    }
+    console.log( 'process( ' + post.title + ' )' );
+    var url = imageFromPost( post, force );
     var args = window.location.href.split( '#' );
 
     if ( url === false ) {
-        return direction();
+        return lastMotion();
     }
-    items[ current ].data.url = url;
-    if ( first == -1 ) {
-        first = current;
-    }
+    post.url = url;
 
     if ( args.length > 1 ) {
-        args[ 1 ] = items[ current ].data.name;
+        args[ 1 ] = post.name;
         window.location.href = args.join( '#' );
     }
     else {
-        window.location.href += '#' + items[ current ].data.name;
+        window.location.href += '#' + post.name;
     }
 
     $( '#img' ).error( function() {
-        direction();
+        lastMotion();
     } );
 
-    return render();
-}
-function update( direction ) {
-    if ( items.length <= current ) {
-        var after = '';
-
-        if ( items.length ) {
-            after = items[ items.length - 1 ].data.name;
-        }
-        download( after, 25, function () {
-            process( direction );
-        } );
-    }
-    else {
-        process( direction );
-    }
+    return render( post );
 }
 
 var loadWait = false;
 
-function render() {
-    var item = items[ current ].data;
+function render( post ) {
+    console.log( 'render( ' + post.title + ' )' );
+
+    var actualURL = getImage( post.url );
+
+    if ( $( '#img' )[ 0 ].src == actualURL ) {
+        // nothing to load, we're already there
+        return;
+    }
+
     $( '#img' ).hide();
-    $( '#img' )[ 0 ].src = item.url;
 
     // this intentionally left unescaped; reddit sends this including HTML entities that must be rendered correctly
     // we trust reddit to do the escaping correctly
-    $( 'h2' ).html( item.title );
-    $( '.reddit' )[ 0 ].href = 'http://reddit.com' + item.permalink;
+    $( 'h2' ).html( post.title );
+    $( '.reddit' )[ 0 ].href = 'http://reddit.com' + post.permalink;
     loadWait = setTimeout( function() {
         $( '#loading' ).fadeIn();
     }, 500 );
+    $( '#img' )[ 0 ].onload = function() {
+        clearTimeout( loadWait );
+        $( '#loading' ).hide();
+        $( '#img' ).show();
+        markAsRead( post.name );
+    };
+    $( '#img' )[ 0 ].src = actualURL;
 }
-
-function handleImageLoaded() {
-    clearTimeout( loadWait );
-    $( '#loading' ).hide();
-    $( '#img' ).show();
-    // $( '#img' )[ 0 ].height = $( window ).height() - $( '#img' )[ 0 ].offsetTop - 20;
-    markAsRead( items[ current ].data.name );
-}
-
-$( '#img' ).load( handleImageLoaded );
 
 loadStorage();
 
@@ -260,6 +219,10 @@ function markAsRead( name ) {
     console.log( 'Marking ' + name + ' as read.' );
     read[ name ] = true;
     saveStorage();
+}
+function markAsReadImmediate( name ) {
+    markAsRead( name );
+    localRead[ name ] = true;
 }
 function saveStorage() {
     if ( typeof( localStorage ) !== 'undefined' ) {
