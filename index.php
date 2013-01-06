@@ -1,6 +1,6 @@
 <?php
     if ( !empty( $_GET[ 'r' ] ) ) {
-        $subreddit = preg_replace( '#[^a-zA-Z0-9_-]+#', '', $_GET[ 'r' ] );
+        $subreddit = preg_replace( '#[^a-zA-Z0-9_+-]+#', '', $_GET[ 'r' ] );
     }
     else {
         $subreddit = 'funny';
@@ -56,20 +56,12 @@
         <script src='http://code.jquery.com/jquery-1.8.1.min.js'></script>
         <script src='js/json2.js'></script>
         <script src='js/reddit.js'></script>
+        <script src='js/string.js'></script>
+        <script src='js/storage.js'></script>
+        <script src='js/keyboard.js'></script>
+        <script src='js/image.js'></script>
         <script src='js/behavior.js'></script>
-        <script>
-          var _gaq = [
-              [ '_setAccount', 'UA-37042847-1' ],
-              [ '_trackPageview' ]
-          ];
-
-          ( function() {
-              var ga = document.createElement( 'script' );
-              ga.async = true;
-              ga.src = 'http://www.google-analytics.com/ga.js';
-              var s = document.getElementsByTagName( 'script' )[ 0 ];
-              s.parentNode.insertBefore( ga, s );
-          } )();
-        </script>
+        <script src='js/ui.js'></script>
+        <script src='js/analytics.js'></script>
     </body>
 </html>
