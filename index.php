@@ -55,8 +55,17 @@
             <a href='https://github.com/dionyziz/minireddit' class='developers' title='Fork me on GitHub' target='_blank'><img src='images/github_icon.png' alt='GitHub' /></a>
         </div>
         <ul class='info'>
-            <li><a href='' id='settings'><img src='images/settings.png' alt='Settings' /></a></li>
-            <li><a href='' class='reddit' target='_blank'><img src='images/reddit_16.png' alt='Reddit' /></a></li>
+            <li><a href='' id='settings'>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </a></li>
+            <li><a href='' id='reddit' target='_blank'>
+                <span class='circle'></span>
+                <span class='arrow'></span>
+                <span class='head'></span>
+            </a></li>
         </ul>
         <script src='http://code.jquery.com/jquery-1.8.1.min.js'></script>
         <script src='js/json2.js'></script>

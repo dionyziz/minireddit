@@ -14,7 +14,7 @@ var Render = {
         // this intentionally left unescaped; reddit sends this including HTML entities that must be rendered correctly
         // we trust reddit to do the escaping correctly
         $('h2').html(post.title);
-        $('.reddit')[0].href = 'http://reddit.com' + post.permalink;
+        $('#reddit')[0].href = 'http://reddit.com' + post.permalink;
 
         $('#img')[0].onload = function() {
             clearTimeout(Render.loadWait);

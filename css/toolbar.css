@@ -37,6 +37,10 @@
     padding: 5px 0px 5px 8px;
     display: block;
     opacity: 1;
+    position: relative;
+    width: 15px;
+    height: 15px;
+    overflow: hidden;
 }
 .info a:hover {
     opacity: 1;
@@ -85,4 +89,42 @@
     right: 0;
     bottom: 0;
     padding: 10px;
+}
+#settings span {
+    display: block;
+    width: 6px;
+    height: 6px;
+    margin: 1px 1px 0 0;
+    background-color: black;
+    float: left;
+}
+#reddit .circle {
+    width: 6px;
+    height: 6px;
+    display: block;
+    border: 2px solid black;
+    border-radius: 10px;
+    position: absolute;
+    top: 8px;
+}
+#reddit .arrow {
+    width: 7px;
+    display: block;
+    border-bottom: 2px solid black;
+    position: absolute;
+    top: 12px;
+    left: 13px;
+    box-shadow: 0 0 1px 1px white;
+}
+#reddit .head {
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 4px solid black;
+    display: block;
+    position: absolute;
+    left: 18px;
+    top: 9px;
 }
