@@ -1,21 +1,36 @@
 body {
     font-family: "Trebuchet MS", Verdana, sans-serif;
     background-color: #ebebeb;
-    background-image: url( 'https://s.ytimg.com/yt/img/refresh/body_noise-vflp89Uii.png' );
+    background-image: url('https://s.ytimg.com/yt/img/refresh/body_noise-vflp89Uii.png');
     background-repeat: repeat;
+    background-size: 75px 75px;
+    margin: 0;
 }
 h2 {
     font-size: 18pt;
     font-weight: normal;
     text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+    background-color: white;
+    margin: 0 0 8px 0;
+    padding: 14px;
+    border-bottom: 1px solid rgba(119, 123, 122, 0.3);
+    line-height: 30px;
 }
 img {
     display: block;
+}
+#loading {
+    margin: auto;
+}
+#img, #oldimg {
+    cursor: pointer;
     margin: auto;
     max-width: 800px;
-}
-#img {
-    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+    box-shadow: 0 1px 16px rgba(0, 0, 0, 0.1);
 }
 .instructions {
     position: fixed;

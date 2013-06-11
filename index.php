@@ -1,6 +1,8 @@
 <?php
-    if ( !empty( $_GET[ 'r' ] ) ) {
-        $subreddit = preg_replace( '#[^a-zA-Z0-9_+-]+#', '', $_GET[ 'r' ] );
+    // TODO: replace all server-side components with python
+
+    if (!empty($_GET['r'])) {
+        $subreddit = preg_replace('#[^a-zA-Z0-9_+-]+#', '', $_GET['r']);
     }
     else {
         $subreddit = 'funny';
@@ -13,13 +15,14 @@
         <title>/r/<?php
         echo $subreddit;
         ?> - MiniReddit</title>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css' />
         <link href='css/style.css' rel='stylesheet' />
         <link rel='icon' type='image/png' href='images/grin.png' />
     </head>
     <body id='r_<?php
         echo $subreddit;
         ?>'>
-        <h2></h2>
+        <h2>&nbsp;</h2>
         <img src='' id='img' />
         <img src='images/bouncing-ball.gif' id='loading' />
         <div class='instructions'>
@@ -34,9 +37,9 @@
                         'aww', 'AdviceAnimals', 'fffffffuuuuuuuuuuuu'
                     );
 
-                    foreach ( $subreddits as $link ) {
+                    foreach ($subreddits as $link) {
                         ?><li<?php
-                        if ( strtolower( $link ) == strtolower( $subreddit ) ) {
+                        if (strtolower($link) == strtolower($subreddit)) {
                             ?> class='selected'<?php
                         }
                         ?>><a href='<?php
@@ -60,6 +63,8 @@
         <script src='js/storage.js'></script>
         <script src='js/keyboard.js'></script>
         <script src='js/image.js'></script>
+        <script src='js/preloading.js'></script>
+        <script src='js/renderer.js'></script>
         <script src='js/behavior.js'></script>
         <script src='js/ui.js'></script>
         <script src='js/analytics.js'></script>
