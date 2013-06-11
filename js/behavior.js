@@ -13,7 +13,7 @@ channel.onnewitemavailable = function(post) {
 // we ran out of pages
 function endOfChannel() {
     console.log('End of subreddit.');
-    renderEnd();
+    Render.end();
 }
 
 /*
@@ -37,10 +37,12 @@ function next() {
     else {
         begun = true;
     }
+    Render.next();
     channel.getCurrent(process);
 }
 function prev() {
     lastMotion = prev;
+    Render.prev();
     channel.goPrevious(stopMotion);
     channel.getCurrent(process);
 }
@@ -86,7 +88,7 @@ function process(post, force) {
         lastMotion();
     });
 
-    return render(post);
+    return Render.post(post);
 }
 
 Storage.load();

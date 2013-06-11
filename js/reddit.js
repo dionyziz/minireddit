@@ -68,6 +68,7 @@ Reddit.Channel.prototype = {
                 console.log('Filter: ');
                 console.log(item);
                 */
+                return true;
 
                 // Go through all items that have already been displayed
                 // and make sure we only inject new content

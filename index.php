@@ -1,10 +1,11 @@
 <?php
     // TODO: replace all server-side components with python
 
+    $subreddit = '';
     if (!empty($_GET['r'])) {
         $subreddit = preg_replace('#[^a-zA-Z0-9_+-]+#', '', $_GET['r']);
     }
-    else {
+    if (empty($subreddit)) {
         $subreddit = 'funny';
     }
 ?>
@@ -15,14 +16,15 @@
         <title>/r/<?php
         echo $subreddit;
         ?> - MiniReddit</title>
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css' />
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' />
         <link href='css/style.css' rel='stylesheet' />
-        <link rel='icon' type='image/png' href='images/grin.png' />
+        <link href='css/toolbar.css' rel='stylesheet' />
+        <link rel='icon' type='image/png' href='images/300px_grin.png' />
     </head>
     <body id='r_<?php
         echo $subreddit;
         ?>'>
-        <h2>&nbsp;</h2>
+        <h2></h2>
         <img src='' id='img' />
         <img src='images/bouncing-ball.gif' id='loading' />
         <div class='instructions'>

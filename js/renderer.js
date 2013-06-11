@@ -1,36 +1,82 @@
-var loadWait = false;
+var Render = {
+    loadWait: false,
+    ANIMATION_SPEED: 400,
+    ANIMATION_OFFSET: 50,
+    lastMotion: 0,
+    gone: false,
+    post: function(post) {
+        Render.gone = false;
 
-function render(post) {
-    console.log('render(' + post.title + ')');
+        console.log('render(' + post.title + ')');
 
-    var actualURL = getImage(post.url);
+        var actualURL = getImage(post.url);
 
-    if ($('#img')[0].src == actualURL) {
-        // nothing to load, we're already there
-        return;
+        // this intentionally left unescaped; reddit sends this including HTML entities that must be rendered correctly
+        // we trust reddit to do the escaping correctly
+        $('h2').html(post.title);
+        $('.reddit')[0].href = 'http://reddit.com' + post.permalink;
+
+        $('#img')[0].onload = function() {
+            clearTimeout(Render.loadWait);
+            $('#loading').hide();
+            $('#img').show();
+            var finalLocation = Math.floor($(window).width() / 2 - $('#img').width() / 2);
+            $('#img').css({
+                opacity: 0,
+                left: finalLocation + Render.lastMotion * Render.ANIMATION_OFFSET + 'px'
+            })
+            .animate({
+                opacity: 1,
+                left: finalLocation
+            }, Render.ANIMATION_SPEED);
+            Storage.markAsRead(post.name);
+        };
+
+        $('#img').attr('src', actualURL);
+    },
+    end: function() {
+        $('#img').hide();
+        $('h2').html('<em>This subreddit has no more content.</em>');
+    },
+    motion: function() {
+        Render.gone = true;
+
+        $('h2').html('');
+        $(window).scrollTop(0);
+
+        $('#oldimg').remove();
+        $('<img id="oldimg" />')
+        .attr('src', $('#img').attr('src'))
+        .css({
+            left: $('#img').offset().left + 'px',
+            top: $('#img').offset().top + 'px'
+        })
+        .insertBefore('#img')
+        .animate({
+            opacity: 0,
+            left: $('#img').offset().left - Render.lastMotion * Render.ANIMATION_OFFSET + 'px'
+        }, Render.ANIMATION_SPEED, 'swing', function() {
+            $('#oldimg').remove();
+        });
+
+        $('#img').hide();
+
+        Render.loadWait = setTimeout(function() {
+            $('#loading').fadeIn();
+        }, 500);
+    },
+    next: function() {
+        if (Render.gone) {
+            return;
+        }
+        Render.lastMotion = 1;
+        Render.motion();
+    },
+    prev: function() {
+        if (Render.gone) {
+            return;
+        }
+        Render.lastMotion = -1;
+        Render.motion();
     }
-
-    $('<img id="oldimg" />').attr('src', $('#img').src).insertBefore('#img');
-
-    $('#img').hide();
-
-    // this intentionally left unescaped; reddit sends this including HTML entities that must be rendered correctly
-    // we trust reddit to do the escaping correctly
-    $('h2').html(post.title);
-    $('.reddit')[0].href = 'http://reddit.com' + post.permalink;
-    loadWait = setTimeout(function() {
-        $('#loading').fadeIn();
-    }, 500);
-    $('#img')[0].onload = function() {
-        clearTimeout(loadWait);
-        $('#loading').hide();
-        $('#img').show();
-        Storage.markAsRead(post.name);
-    };
-    $('#img')[0].src = actualURL;
-}
-
-function renderEnd() {
-    $('#img').hide();
-    $('h2').html('<em>This subreddit has no more content.</em>');
-}
+};
