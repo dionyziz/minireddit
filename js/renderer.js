@@ -26,9 +26,10 @@ var Render = {
                 opacity: 0,
                 left: finalLocation + Render.lastMotion * Render.ANIMATION_OFFSET + 'px'
             })
-            .animate({
+            .stop().animate({
                 opacity: 1,
-                left: finalLocation
+                left: finalLocation,
+                queue: false
             }, Render.ANIMATION_SPEED);
             Storage.markAsRead(post.name);
         });
@@ -53,9 +54,10 @@ var Render = {
             top: $('#img').offset().top + 'px'
         })
         .insertBefore('#img')
-        .animate({
+        .stop().animate({
             opacity: 0,
-            left: $('#img').offset().left - Render.lastMotion * Render.ANIMATION_OFFSET + 'px'
+            left: $('#img').offset().left - Render.lastMotion * Render.ANIMATION_OFFSET + 'px',
+            queue: false
         }, Render.ANIMATION_SPEED, 'swing', function() {
             $('#oldimg').remove();
         });
