@@ -36,9 +36,14 @@ a img {
 }
 #loading {
     margin: auto;
-}
-#oldimg {
     position: absolute;
+    left: 50%;
+    margin-left: -2px;
+}
+#img.pageflip, #oldimg.pageflip {
+    -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+    -webkit-transform-origin: 0 50%;
+    -webkit-transform: perspective(1200px) rotateY(0deg);
 }
 #img, #oldimg {
     cursor: pointer;
@@ -48,4 +53,8 @@ a img {
     border-radius: 3px;
     box-shadow: 0 1px 16px rgba(0, 0, 0, 0.1);
     position: absolute;
+    -webkit-transition: opacity 0.3s;
+}
+#oldimg {
+    pointer-events: none;
 }

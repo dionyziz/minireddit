@@ -49,6 +49,7 @@ function prev() {
 lastMotion = next;
 
 function imageFromPost(post) {
+    console.log('imageFromPost(' + post.name + ')');
     var url = getImage(post.url);
 
     if (url === false) {

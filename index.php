@@ -33,7 +33,9 @@
         </div>
         <div class='content'>
             <h2 class='title'></h2>
-            <img src='' id='img' />
+            <div class='imgcontainer'>
+                <img src='' id='img' />
+            </div>
             <img src='images/bouncing-ball.gif' id='loading' />
             <div class='instructions'>
                 Press <span>j</span> to go to the next image.

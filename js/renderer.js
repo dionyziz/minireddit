@@ -2,6 +2,7 @@ var Render = {
     loadWait: false,
     ANIMATION_SPEED: 400,
     ANIMATION_OFFSET: 50,
+    ANIMATION_PERSPECTIVE: 1200,
     lastMotion: 0,
     gone: false,
     post: function(post) {
@@ -16,21 +17,28 @@ var Render = {
         $('h2.title').html(post.title);
         $('#reddit')[0].href = 'http://reddit.com' + post.permalink;
 
-        $('#img').hide();
+        $('#img').css({
+            opacity: 0,
+            webkitTransform: 'perspective(' + Render.ANIMATION_PERSPECTIVE + 'px) rotateY(-60deg)',
+        }).hide();
         $('#img')[0].onload = function() {
+            var finalLocation = Math.floor($(window).width() / 2 - $('#img').width() / 2);
+
             clearTimeout(Render.loadWait);
             $('#loading').hide();
-            $('#img').show();
-            var finalLocation = Math.floor($(window).width() / 2 - $('#img').width() / 2);
-            $('#img').css({
-                opacity: 0,
-                left: finalLocation + Render.lastMotion * Render.ANIMATION_OFFSET + 'px'
-            })
-            .stop().animate({
-                opacity: 1,
-                left: finalLocation,
-                queue: false
-            }, Render.ANIMATION_SPEED);
+            $('#img').show().css({
+                left: finalLocation + 'px',
+            });
+            if (Render.lastMotion == -1) {
+                Render.moveIn($('#img').css({zIndex: 100}).addClass('pageflip'));
+            }
+            else {
+                $('#img').removeClass('pageflip').css({
+                    zIndex: 1,
+                    opacity: 1,
+                    webkitTransform: 'perspective(' + Render.ANIMATION_PERSPECTIVE + 'px) rotateY(0deg)'
+                });
+            }
             Storage.markAsRead(post);
         };
 
@@ -40,6 +48,19 @@ var Render = {
         $('#img').hide();
         $('h2.title').html('<em>This subreddit has no more content.</em>');
     },
+    moveOut: function($img) {
+        $img.css({
+            webkitTransform: 'perspective(' + Render.ANIMATION_PERSPECTIVE + 'px) rotateY(-60deg)',
+            opacity: 0
+        });
+    },
+    moveIn: function($img) {
+        $img
+        .css({
+            webkitTransform: 'perspective(' + Render.ANIMATION_PERSPECTIVE + 'px) rotateY(0deg)',
+            opacity: 1
+        });
+    },
     motion: function() {
         Render.gone = true;
 
@@ -47,20 +68,19 @@ var Render = {
         $(window).scrollTop(0);
 
         $('#oldimg').remove();
-        $('<img id="oldimg" />')
+        $oldimg = $('<img id="oldimg" />')
+        .addClass('pageflip')
         .attr('src', $('#img').attr('src'))
-        .css({
-            left: $('#img').offset().left + 'px',
-            top: $('#img').offset().top + 'px'
-        })
         .insertBefore('#img')
-        .stop().animate({
-            opacity: 0,
-            left: $('#img').offset().left - Render.lastMotion * Render.ANIMATION_OFFSET + 'px',
-            queue: false
-        }, Render.ANIMATION_SPEED, 'swing', function() {
-            $('#oldimg').remove();
+        .css({
+            left: Math.floor($(window).width() / 2 - $('#img').width() / 2) + 'px'
         });
+        if (Render.lastMotion == 1) {
+            Render.moveOut($oldimg.css({zIndex: 100}));
+        }
+        else {
+            $oldimg.css({zIndex: 1}).css({opacity: 0});
+        }
 
         $('#img').hide();
 

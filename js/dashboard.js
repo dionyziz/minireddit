@@ -48,9 +48,11 @@ var Dashboard = {
     },
     generateSubredditContent: function(subreddit, channel) {
         channel.getCurrent(function(post) {
-            var url = imageFromPost(post);
+            console.log('Generate subteddit content');
 
-            if (url == false || Storage.isRead(post.name)) {
+            var url = imageFromPost(post);
+            
+            if (url === false || Storage.isRead(post.name)) {
                 channel.goNext();
                 Dashboard.generateSubredditContent(subreddit, channel);
                 return;
