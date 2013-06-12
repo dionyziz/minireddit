@@ -9,7 +9,9 @@ body {
 .content {
     background-color: rgba(235, 235, 235, 1);
     -webkit-transition: -webkit-transform 1s, opacity 1s, background-color 1s;
+    -moz-transition: -moz-transform 1s, opacity 1s, background-color 1s;
     -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
 }
 h2.title {
     font-size: 18pt;
@@ -19,6 +21,7 @@ h2.title {
     font-weight: 300;
     background-color: rgba(255, 255, 255, 1);
     -webkit-transition: 1s;
+    -moz-transition: 1s;
     margin: 0 0 8px 0;
     padding: 14px;
     border-bottom: 1px solid rgba(119, 123, 122, 0.3);

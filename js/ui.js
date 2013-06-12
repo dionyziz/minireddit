@@ -11,7 +11,16 @@ $('#settings').click(function(e) {
             height: $(window).height() + 'px',
         });
 
-        var c_prime_offset = $('#dashboard_thumb_' + subreddit + ' div.wrapper div').offset();
+        var c_prime_offset;
+        if ($('#dashboard_thumb_' + subreddit + ' div.wrapper div').length) {
+            c_prime_offset = $('#dashboard_thumb_' + subreddit + ' div.wrapper div').offset();
+        }
+        else {
+            c_prime_offset = {
+                left: 0,
+                top: 0
+            };
+        }
         var c = new Vector($('#img').offset().left - $(document).scrollLeft() + $('#img').width() / 2,
                            $('#img').offset().top - $(document).scrollTop() + $('#img').height() / 2);
         var c_prime = new Vector(c_prime_offset.left + Dashboard.W / 2, c_prime_offset.top + Dashboard.H / 2);
@@ -26,6 +35,7 @@ $('#settings').click(function(e) {
 
         var t = c_prime.minus(c.scale(lambda));
         var f = t.scale(1 / (1 - lambda));
+        var cssOrigin = Math.floor(f.x) + 'px ' + Math.floor(f.y) + 'px';
 
         $('.content').css({
             height: $(window).height() + 'px',
@@ -33,8 +43,12 @@ $('#settings').click(function(e) {
             position: 'absolute',
             minHeight: '100%',
             minWidth: '100%',
-            webkitTransformOrigin: Math.floor(f.x) + 'px ' + Math.floor(f.y) + 'px',
+            webkitTransformOrigin: cssOrigin,
+            mozTransformOrigin: cssOrigin,
+            transformOrigin: cssOrigin,
             webkitTransform: 'scale(' + lambda + ')',
+            mozTransform: 'scale(' + lambda + ')',
+            transform: 'scale(' + lambda + ')',
             pointerEvents: 'none',
             backgroundColor: 'rgba(235, 235, 235, 0)'
         });
