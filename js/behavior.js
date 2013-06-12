@@ -62,7 +62,7 @@ function process(post, force) {
         force = false;
     }
     console.log('process(' + post.title + ')');
-    var url = imageFromPost(post, force);
+    var url = imageFromPost(post);
 
     if (!force && Storage.isRead(post.name)) {
         console.log('Skipping read item ' + post.url);

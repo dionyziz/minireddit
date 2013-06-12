@@ -6,7 +6,12 @@ body {
     background-size: 75px 75px;
     margin: 0;
 }
-h2 {
+.content {
+    background-color: #ebebeb;
+    -webkit-transition: -webkit-transform 1s, left 1s, top 1s, opacity 1s;
+    -webkit-transform-origin: 0 0;
+}
+h2.title {
     font-size: 18pt;
     font-weight: normal;
     text-align: center;
@@ -21,6 +26,9 @@ h2 {
 }
 img {
     display: block;
+}
+a img {
+    border: 0;
 }
 #loading {
     margin: auto;

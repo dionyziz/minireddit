@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>miniredd.it - Dashboard</title>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' />
+        <meta charset='utf-8' />
+        <style>
+            body {
+                margin: 0;
+            }
+            .dashboard {
+                font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+                background-color: #eaeaea;
+                margin: 0;
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+            h2 {
+                color: #777;
+                font-weight: normal; 
+                text-align: left;
+                padding: 0 17px;
+                margin: 0;
+                font-size: 90%;
+                text-shadow: 1px 1px 0 white;
+            }
+            ol {
+                list-style: none;
+                width: 950px;
+                margin: auto;
+                padding: 50px;
+                overflow: hidden;
+                background-color: #f3f3f3;
+                border-bottom-left-radius: 3px;
+                border-bottom-right-radius: 3px;
+                box-shadow: 0 1px 16px rgba(0, 0, 0, 0.1);
+                border: 1px solid #d5d5d5;
+                border-top-style: none;
+            }
+            li {
+                float: left;
+                position: relative;
+                cursor: pointer;
+                margin: 0 0 50px 0;
+            }
+            li:hover div.wrapper:after {
+                opacity: 0.1;
+            }
+            div.wrapper:after {
+                -webkit-transition: 0.2s;
+                opacity: 0.5;
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                margin: 6px;
+                width: 150px;
+                height: 150px;
+
+                background: -moz-radial-gradient(center, ellipse cover,  rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.53) 100%); /* FF3.6+ */
+                background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(0,0,0,0)), color-stop(50%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.53))); /* Chrome,Safari4+ */
+                background: -webkit-radial-gradient(center, ellipse cover,  rgba(0,0,0,0) 0%,rgba(0,0,0,0) 50%,rgba(0,0,0,0.53) 100%); /* Chrome10+,Safari5.1+ */
+                background: -o-radial-gradient(center, ellipse cover,  rgba(0,0,0,0) 0%,rgba(0,0,0,0) 50%,rgba(0,0,0,0.53) 100%); /* Opera 12+ */
+                background: -ms-radial-gradient(center, ellipse cover,  rgba(0,0,0,0) 0%,rgba(0,0,0,0) 50%,rgba(0,0,0,0.53) 100%); /* IE10+ */
+                background: radial-gradient(ellipse at center,  rgba(0,0,0,0) 0%,rgba(0,0,0,0) 50%,rgba(0,0,0,0.53) 100%); /* W3C */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#87000000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+                                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#33000000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+            }
+            div.wrapper {
+                position: relative;
+                box-shadow: 0 1px 16px rgba(0, 0, 0, 0.1);
+                width: 152px;
+                height: 152px;
+                margin: 5px 10px;
+                padding: 5px;
+                background-color: rgba(255, 255, 255, 0.8);
+                border: 1px solid rgba(0, 0, 0, 0.2);
+            }
+            div.wrapper div {
+                width: 150px;
+                height: 150px;
+                overflow: hidden;
+                border: 1px solid rgba(0, 0, 0, 0.15);
+            }
+            img {
+                position: relative;
+            }
+            div.copy {
+                text-align: center;
+                color: #999;
+                font-size: 50%;
+                margin: 20px 0 0 0;
+                text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+                font-weight: bold;
+                text-transform: uppercase;
+                vertical-align: top;
+            }
+            a img {
+                border: 0;
+            }
+            div.copy a:hover img {
+                top: -2px;
+                opacity: 1;
+            }
+            div.copy img {
+                width: 16px;
+                height: 16px;
+                margin: -4px 4px;
+                -webkit-transition: 0.2s;
+                position: relative;
+                opacity: 0.4;
+            }
+            div.copy span {
+                text-shadow: none;
+                vertical-align: top;
+            }
+        </style>
+    </head>
+    <body>
+        <div class='dashboard'>
+            <ol>
+                <li>
+                    <h2>funny</h2>
+                    <div class='wrapper'>
+                        <div>
+                            <img src='http://i.imgur.com/leWXamV.jpg' />
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h2>pics</h2>
+                    <div class='wrapper'>
+                        <div>
+                            <img src='http://www.the360experiment.com/wp-content/uploads/2012/08/21/Screen-shot-2012-08-20-at-9.57.33-PM.png' />
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h2>aww</h2>
+                    <div class='wrapper'>
+                        <div>
+                            <img src='http://i.imgur.com/pOQCgR2.jpg' />
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h2>wtf</h2>
+                    <div class='wrapper'>
+                        <div>
+                            <img src='http://i.imgur.com/sgRp4Kr.jpg' />
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h2>AdviceAnimals</h2>
+                    <div class='wrapper'>
+                        <div>
+                            <img src='http://i.imgur.com/TB3dr.jpg' />
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h2>fffffffuuuuuuuuuuuu</h2>
+                    <div class='wrapper'>
+                        <div>
+                            <img src='http://i.imgur.com/L9ZU6LO.jpg' />
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h2>gifs</h2>
+                    <div class='wrapper'>
+                        <div>
+                            <img src='http://i.imgur.com/VQLGJOL.gif' />
+                        </div>
+                    </div>
+                </li>
+            </ol>
+            <div class='copy'>
+                <span>❤</span> minireddit <a href='https://github.com/dionyziz/minireddit'><img src='http://dev.miniredd.it/images/github_256.png' /></a>
+            </div>
+        </div>
+        <script src='//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js'></script>
+        <script>
+            var DASHBOARD_W = 150,
+                DASHBOARD_H = DASHBOARD_W;
+
+            $('.dashboard ol img').each(function() {
+                var $this = $(this);
+                var onload = function() {
+                    $this.css({
+                        width: 'auto',
+                        height: 'auto'
+                    });
+                    if ($this.width() < $this.height()) {
+                        $this.css({
+                            width: DASHBOARD_W + 'px',
+                            height: $this.height() / ($this.width() / DASHBOARD_W) + 'px'
+                        });
+                    }
+                    else {
+                        $this.css({
+                            width: $this.width() / ($this.height() / DASHBOARD_H) + 'px',
+                            height: DASHBOARD_H + 'px'
+                        });
+                    }
+                    $this.css({
+                        left: Math.floor(DASHBOARD_W / 2 - $this.width() / 2) + 'px',
+                        top: Math.floor(DASHBOARD_H / 2 - $this.height() / 2) + 'px'
+                    });
+                };
+                $this.load(onload);
+                onload();
+            });
+        </script>
+    </body>
+</html>

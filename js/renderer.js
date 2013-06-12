@@ -13,10 +13,11 @@ var Render = {
 
         // this intentionally left unescaped; reddit sends this including HTML entities that must be rendered correctly
         // we trust reddit to do the escaping correctly
-        $('h2').html(post.title);
+        $('h2.title').html(post.title);
         $('#reddit')[0].href = 'http://reddit.com' + post.permalink;
 
-        $('#img')[0].onload = function() {
+        $('#img').hide();
+        $('#img').load(function() {
             clearTimeout(Render.loadWait);
             $('#loading').hide();
             $('#img').show();
@@ -30,18 +31,18 @@ var Render = {
                 left: finalLocation
             }, Render.ANIMATION_SPEED);
             Storage.markAsRead(post.name);
-        };
+        });
 
         $('#img').attr('src', actualURL);
     },
     end: function() {
         $('#img').hide();
-        $('h2').html('<em>This subreddit has no more content.</em>');
+        $('h2.title').html('<em>This subreddit has no more content.</em>');
     },
     motion: function() {
         Render.gone = true;
 
-        $('h2').html('');
+        $('h2.title').html('');
         $(window).scrollTop(0);
 
         $('#oldimg').remove();

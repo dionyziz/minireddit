@@ -23,6 +23,7 @@ var Reddit = {
         this.subreddits = subreddits;
         this.items = [];
         this.currentID = 0;
+        this.limit = 25;
 
         this.onnewitemavailable = function() {};
         this.onerror = function() {};
@@ -56,7 +57,7 @@ Reddit.Channel.prototype = {
         $.get('feed.php', {
             r: this.subreddits.join('+'),
             after: after,
-            limit: 25
+            limit: this.limit
         }, function(feed) {
             var prevlength = self.items.length;
 

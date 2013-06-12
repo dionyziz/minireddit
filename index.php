@@ -19,54 +19,40 @@
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' />
         <link href='css/style.css' rel='stylesheet' />
         <link href='css/toolbar.css' rel='stylesheet' />
+        <link href='css/dashboard.css' rel='stylesheet' />
         <link rel='icon' type='image/png' href='images/300px_grin.png' />
     </head>
     <body id='r_<?php
         echo $subreddit;
         ?>'>
-        <h2></h2>
-        <img src='' id='img' />
-        <img src='images/bouncing-ball.gif' id='loading' />
-        <div class='instructions'>
-            Press <span>j</span> to go to the next image.
+        <div class='dashboard'>
+            <ol></ol>
+            <div class='copy'>
+                <span>❤</span> minireddit <a href='https://github.com/dionyziz/minireddit'><img src='http://dev.miniredd.it/images/github_256.png' /></a>
+            </div>
         </div>
-        <div class='bubble'>
-            Choose a subreddit:
-            <ul>
-                <?php
-                    $subreddits = array(
-                        'pics', 'funny', 'WTF', 'atheism',
-                        'aww', 'AdviceAnimals', 'fffffffuuuuuuuuuuuu'
-                    );
-
-                    foreach ($subreddits as $link) {
-                        ?><li<?php
-                        if (strtolower($link) == strtolower($subreddit)) {
-                            ?> class='selected'<?php
-                        }
-                        ?>><a href='<?php
-                        echo $link;
-                        ?>'>/r/<?php
-                        echo $link;
-                        ?></a></li><?php
-                    }
-                ?>
+        <div class='content'>
+            <h2 class='title'></h2>
+            <img src='' id='img' />
+            <img src='images/bouncing-ball.gif' id='loading' />
+            <div class='instructions'>
+                Press <span>j</span> to go to the next image.
+            </div>
+            <ul class='info'>
+                <li><a href='' id='settings'>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </a></li>
+                <li><a href='' id='reddit' target='_blank'>
+                    <span class='circle'></span>
+                    <span class='arrow'></span>
+                    <span class='head'></span>
+                </a></li>
             </ul>
-            <a href='https://github.com/dionyziz/minireddit' class='developers' title='Fork me on GitHub' target='_blank'><img src='images/github_icon.png' alt='GitHub' /></a>
+            <div style='clear:both'></div>
         </div>
-        <ul class='info'>
-            <li><a href='' id='settings'>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-            </a></li>
-            <li><a href='' id='reddit' target='_blank'>
-                <span class='circle'></span>
-                <span class='arrow'></span>
-                <span class='head'></span>
-            </a></li>
-        </ul>
         <script src='http://code.jquery.com/jquery-1.8.1.min.js'></script>
         <script src='js/json2.js'></script>
         <script src='js/reddit.js'></script>
@@ -78,6 +64,7 @@
         <script src='js/renderer.js'></script>
         <script src='js/behavior.js'></script>
         <script src='js/ui.js'></script>
+        <script src='js/dashboard.js'></script>
         <script src='js/analytics.js'></script>
     </body>
 </html>

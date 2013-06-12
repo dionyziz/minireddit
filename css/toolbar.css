@@ -40,7 +40,6 @@
     position: relative;
     width: 15px;
     height: 15px;
-    overflow: hidden;
 }
 .info a:hover {
     opacity: 1;
@@ -97,6 +96,24 @@
     margin: 1px 1px 0 0;
     background-color: black;
     float: left;
+    position: relative;
+    -webkit-transition-duration: 0.2s;
+}
+#settings:hover span:nth-child(1) {
+    top: -2px;
+    left: -2px;
+}
+#settings:hover span:nth-child(2) {
+    top: -2px;
+    left: 2px;
+}
+#settings:hover span:nth-child(3) {
+    top: 2px;
+    left: -2px;
+}
+#settings:hover span:nth-child(4) {
+    top: 2px;
+    left: 2px;
 }
 #reddit .circle {
     width: 6px;
@@ -106,6 +123,9 @@
     border-radius: 10px;
     position: absolute;
     top: 8px;
+}
+#reddit .arrow, #reddit .head {
+    -webkit-transition-duration: 0.2s;
 }
 #reddit .arrow {
     width: 7px;
@@ -127,4 +147,10 @@
     position: absolute;
     left: 18px;
     top: 9px;
+}
+#reddit:hover .arrow {
+    left: 16px;
+}
+#reddit:hover .head {
+    left: 21px;
 }
