@@ -63,6 +63,7 @@
         <script src='js/preloading.js'></script>
         <script src='js/renderer.js'></script>
         <script src='js/behavior.js'></script>
+        <script src='js/vector.js'></script>
         <script src='js/ui.js'></script>
         <script src='js/dashboard.js'></script>
         <script src='js/analytics.js'></script>

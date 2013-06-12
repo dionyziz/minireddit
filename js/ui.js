@@ -1,23 +1,53 @@
 $('#settings').click(function(e) {
-    $('.dashboard').show().css({
-        opacity: 1
-    });
+    $(document).scrollTop(0);
+    
+    setTimeout(function() {
+        $('.dashboard').show().css({
+            opacity: 1
+        });
+        $('.content').css({
+            overflow: 'hidden',
+            width: $(window).width() + 'px',
+            height: $(window).height() + 'px',
+        });
 
-    var origin = $('#dashboard_thumb_' + subreddit).offset();
+        var c_prime_offset = $('#dashboard_thumb_' + subreddit + ' div.wrapper div').offset();
+        var c = new Vector($('#img').offset().left - $(document).scrollLeft() + $('#img').width() / 2,
+                           $('#img').offset().top - $(document).scrollTop() + $('#img').height() / 2);
+        var c_prime = new Vector(c_prime_offset.left + Dashboard.W / 2, c_prime_offset.top + Dashboard.H / 2);
+        var lambda;
 
-    console.log('origin:');
-    console.log(origin.left, origin.top);
+        if ($('#img').width() < $('#img').height()) {
+            lambda = Dashboard.W / $('#img').width();
+        }
+        else {
+            lambda = Dashboard.H / $('#img').height();
+        }
 
-    $('.content').css({
-        height: $(window).height() + 'px',
-        opacity: 0,
-        position: 'absolute',
-        minHeight: '100%',
-        webkitTransformOrigin: (origin.left + Dashboard.W / 2) + 'px ' + (origin.top + Dashboard.H / 2) + 'px',
-        webkitTransform: 'scale(0.2)'
-    });
-    Dashboard.align();
-    e.stopPropagation();
+        var t = c_prime.minus(c.scale(lambda));
+        var f = t.scale(1 / (1 - lambda));
+
+        $('.content').css({
+            height: $(window).height() + 'px',
+            opacity: 0,
+            position: 'absolute',
+            minHeight: '100%',
+            minWidth: '100%',
+            webkitTransformOrigin: Math.floor(f.x) + 'px ' + Math.floor(f.y) + 'px',
+            webkitTransform: 'scale(' + lambda + ')',
+            pointerEvents: 'none',
+            backgroundColor: 'rgba(235, 235, 235, 0)'
+        });
+        $('.info').css({
+            opacity: 0
+        });
+        $('h2.title').css({
+            opacity: 0
+        });
+        Dashboard.align();
+        e.stopPropagation();
+    }, 20);
+
     return false;
 });
 

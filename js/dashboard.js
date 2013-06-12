@@ -43,6 +43,7 @@ var Dashboard = {
         var channel = new Reddit.Channel(subreddit);
         channel.limit = 5;
 
+        Dashboard.generateSubredditThumb(subreddit);
         Dashboard.generateSubredditContent(subreddit, channel);
     },
     generateSubredditContent: function(subreddit, channel) {
@@ -54,16 +55,19 @@ var Dashboard = {
                 Dashboard.generateSubredditContent(subreddit, channel);
                 return;
             }
-            Dashboard.generateSubredditThumb(subreddit, url);
+            Dashboard.replaceSubredditThumb(subreddit, url);
         });
     },
-    generateSubredditThumb: function(subreddit, thumbnail) {
+    replaceSubredditThumb: function(subreddit, thumbnail) {
+        $('#dashboard_thumb_' + subreddit + ' img').attr('src', thumbnail);
+    },
+    generateSubredditThumb: function(subreddit) {
         var $li = $("<li id='dashboard_thumb_" + subreddit + "'>"
                      + "<a href='/" + subreddit + "'>"
                      + "<h2>" + subreddit + "</h2>"
                         + "<div class='wrapper'>"
                             + "<div>"
-                                + "<img src='" + thumbnail + "' />"
+                                + "<img src='' alt='" + subreddit + "' />"
                             + "</div>"
                         + "</div>"
                     + "</a>"
