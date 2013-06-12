@@ -4,9 +4,9 @@ var Storage = {
     isRead: function(name) {
         return typeof this.localRead[name] !== 'undefined';
     },
-    markAsRead: function(name) {
-        console.log('Marking ' + name + ' as read.');
-        this.read[name] = true;
+    markAsRead: function(post) {
+        console.log('Marking ' + post.name + ' as read (' + post.title + ').');
+        this.read[post.name] = true;
         this.save();
     },
     save: function() {

@@ -17,7 +17,7 @@ var Render = {
         $('#reddit')[0].href = 'http://reddit.com' + post.permalink;
 
         $('#img').hide();
-        $('#img').load(function() {
+        $('#img')[0].onload = function() {
             clearTimeout(Render.loadWait);
             $('#loading').hide();
             $('#img').show();
@@ -31,8 +31,8 @@ var Render = {
                 left: finalLocation,
                 queue: false
             }, Render.ANIMATION_SPEED);
-            Storage.markAsRead(post.name);
-        });
+            Storage.markAsRead(post);
+        };
 
         $('#img').attr('src', actualURL);
     },
