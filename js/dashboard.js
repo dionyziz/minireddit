@@ -31,13 +31,16 @@ var Dashboard = {
         });
     },
     generate: function() {
-        var subreddits = ['funny', 'pics', 'aww', 'wtf', 'AdviceAnimals', 'fffffffuuuuuuuuuuuu', 'gifs'];
+        // give us a couple of seconds' worth of bandwidth to preload content
+        setTimeout(function() {
+            var subreddits = ['funny', 'pics', 'aww', 'wtf', 'AdviceAnimals', 'fffffffuuuuuuuuuuuu', 'gifs'];
 
-        for (var i = 0; i < subreddits.length; ++i) {
-            var subreddit = subreddits[i];
+            for (var i = 0; i < subreddits.length; ++i) {
+                var subreddit = subreddits[i];
 
-            Dashboard.generateSubreddit(subreddit);
-        }
+                Dashboard.generateSubreddit(subreddit);
+            }
+        }, 4000);
     },
     generateSubreddit: function(subreddit) {
         var channel = new Reddit.Channel(subreddit);
@@ -48,7 +51,7 @@ var Dashboard = {
     },
     generateSubredditContent: function(subreddit, channel) {
         channel.getCurrent(function(post) {
-            console.log('Generate subteddit content');
+            console.log('Generate subreddit content');
 
             var url = imageFromPost(post);
             
@@ -77,5 +80,4 @@ var Dashboard = {
         $('.dashboard ol').append($li);
     }
 };
-Dashboard.generate();
 Dashboard.align();

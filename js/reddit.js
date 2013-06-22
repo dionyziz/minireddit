@@ -62,6 +62,10 @@ Reddit.Channel.prototype = {
             var prevlength = self.items.length;
 
             // TODO: Optimize O(n^2) algorithm
+            if (feed == null) {
+                Render.invalid();
+                return;
+            }
             feed.data.children = feed.data.children.map(function(item) {
                 return new Reddit.Post(item.data);
             }).filter(function(item) {

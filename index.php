@@ -36,7 +36,13 @@
             <div class='imgcontainer'>
                 <img src='' id='img' />
             </div>
-            <img src='images/bouncing-ball.gif' id='loading' />
+            <div id='loading'>
+                <div class='text'>
+                    Loading...
+                </div>
+                <div class='progress'><div class='progressbar'></div></div>
+                <img src='images/bouncing-ball.gif' alt='loading' id='bounce' />
+            </div>
             <div class='instructions'>
                 Press <span>j</span> to go to the next image.
             </div>
@@ -64,10 +70,10 @@
         <script src='js/image.js'></script>
         <script src='js/preloading.js'></script>
         <script src='js/renderer.js'></script>
+        <script src='js/dashboard.js'></script>
         <script src='js/behavior.js'></script>
         <script src='js/vector.js'></script>
         <script src='js/ui.js'></script>
-        <script src='js/dashboard.js'></script>
         <script src='js/analytics.js'></script>
     </body>
 </html>

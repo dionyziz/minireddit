@@ -35,6 +35,7 @@ function next() {
         channel.goNext(endOfChannel);
     }
     else {
+        Dashboard.generate();
         begun = true;
     }
     Render.next();
@@ -100,6 +101,7 @@ if (args.length > 1) {
     console.log('Loading post ' + name);
     Reddit.downloadPost(args[1], function(post) {
         process(post, true);
+        Dashboard.generate();
     });
 }
 else {
