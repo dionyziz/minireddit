@@ -28,7 +28,7 @@
         <div class='dashboard'>
             <ol></ol>
             <div class='copy'>
-                <span>❤</span> minireddit <a href='https://github.com/dionyziz/minireddit'><img src='http://dev.miniredd.it/images/github_256.png' /></a>
+                <span>❤</span> minireddit <a href='https://github.com/dionyziz/minireddit'><img src='images/github_256.png' /></a>
             </div>
         </div>
         <div class='content'>
