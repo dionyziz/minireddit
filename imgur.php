@@ -24,9 +24,12 @@
     }
 
     function safeRead( $url ) {
+        if ( substr( $url, 0, 2 ) == '//' ) {
+            $url = 'http:' . $url;
+        }
         $handle = @fopen( $url, 'r' );
         if ( $handle === false ) {
-            return error( 'Remove server looks down. Could not fetch url "' . $url . '".' );
+            return error( 'Remote server looks down. Could not fetch url "' . $url . '".' );
         }
         $buffer = '';
         $size = 0;
@@ -87,7 +90,7 @@
             return error( 'This image is neither on imgur nor on quickmeme.' );
         }
 
-        if ( !preg_match( '#^http\\://.*(jpg|png|gif)$#', $imgURL ) ) {
+        if ( !preg_match( '#^(http\\:)?//.*(jpg|png|gif)$#', $imgURL ) ) {
             return error( "The image source '" . $imgURL . "' is not jpg, gif or png." );
         }
         $type = strtolower( substr( $imgURL, -3 ) );
