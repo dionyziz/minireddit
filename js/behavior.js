@@ -101,7 +101,10 @@ if (args.length > 1) {
     console.log('Loading post ' + name);
     Reddit.downloadPost(args[1], function(post) {
         process(post, true);
-        Dashboard.generate();
+        if (!begun) {
+            Dashboard.generate();
+            begun = true;
+        }
     });
 }
 else {
