@@ -81,7 +81,7 @@ Reddit.Channel.prototype = {
                 // during ranking.
                 for (var i = 0; i < self.items.length; ++i) {
                     var loadedItem = self.items[i];
-                    
+
                     if (item.name === loadedItem.name) {
                         console.log('Skipping already loaded item', item.name);
                         return false;
