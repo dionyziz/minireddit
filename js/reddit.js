@@ -32,6 +32,8 @@ var Reddit = {
 
 Reddit.Channel.prototype = {
     constructor: Reddit.Channel,
+    items: [],
+    itemsDict: {},
     getCurrent: function(callback) {
         var self = this;
 
@@ -61,7 +63,6 @@ Reddit.Channel.prototype = {
         }, function(feed) {
             var prevlength = self.items.length;
 
-            // TODO: Optimize O(n^2) algorithm
             if (feed == null) {
                 Render.invalid();
                 return;
@@ -69,31 +70,24 @@ Reddit.Channel.prototype = {
             feed.data.children = feed.data.children.map(function(item) {
                 return new Reddit.Post(item.data);
             }).filter(function(item) {
-                /*
-                console.log('Filter: ');
-                console.log(item);
-                */
-                return true;
-
-                // Go through all items that have already been displayed
-                // and make sure we only inject new content
+                // Make sure we only inject new content by looking at what
+                // has been shown already.
                 // This is important, as pages in reddit may have changed
                 // during ranking.
-                for (var i = 0; i < self.items.length; ++i) {
-                    var loadedItem = self.items[i];
-                    
-                    if (item.name === loadedItem.name) {
-                        console.log('Skipping already loaded item', item.name);
-                        return false;
-                    }
+                if (typeof self.itemsDict[item.name] !== 'undefined') {
+                    console.log('Skipping already loaded item', item.name);
+                    return false;
                 }
                 return true;
             });
             self.items.push.apply(self.items, feed.data.children);
+
             var newlength = self.items.length;
 
             for (var i = 0; i < feed.data.children.length; ++i) {
-                self.onnewitemavailable(feed.data.children[i]);
+                var item = feed.data.children[i];
+                self.onnewitemavailable(item);
+                self.itemsDict[item.name] = true;
             }
 
             if (prevlength == newlength) {
