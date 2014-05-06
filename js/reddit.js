@@ -74,7 +74,7 @@ Reddit.Channel.prototype = {
                 // has been shown already.
                 // This is important, as pages in reddit may have changed
                 // during ranking.
-                if (typeof self.itemsDict[item.name] !== undefined) {
+                if (typeof self.itemsDict[item.name] !== 'undefined') {
                     console.log('Skipping already loaded item', item.name);
                     return false;
                 }
