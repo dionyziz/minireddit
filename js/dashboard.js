@@ -30,8 +30,12 @@ var Dashboard = {
             onload();
         });
     },
+    loading: function( isLoading ) {
+        $( '.loadingGif' ).toggle( isLoading );
+    },
     generate: function() {
         // give us a couple of seconds' worth of bandwidth to preload content
+        Dashboard.loading( true );
         setTimeout(function() {
             var subreddits = ['funny', 'pics', 'aww', 'wtf', 'AdviceAnimals', 'fffffffuuuuuuuuuuuu', 'gifs'];
 
@@ -40,6 +44,7 @@ var Dashboard = {
 
                 Dashboard.generateSubreddit(subreddit);
             }
+            Dashboard.loading( false );
         }, 4000);
     },
     generateSubreddit: function(subreddit) {

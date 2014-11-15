@@ -26,7 +26,13 @@
         echo $subreddit;
         ?>'>
         <div class='dashboard'>
-            <ol></ol>
+            <div class="subreddits">
+                <div class='loadingGif'>
+                    <p>Loading</p>
+                    <img src="images/loading.gif" width="32" height="32" />
+                </div>
+                <ol></ol>
+            </div>
             <div class='copy'>
                 <span>❤</span> minireddit <a href='https://github.com/dionyziz/minireddit'><img src='images/github_256.png' /></a>
             </div>
