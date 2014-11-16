@@ -21,18 +21,25 @@
     font-size: 90%;
     text-shadow: 1px 1px 0 white;
 }
-.dashboard ol {
-    list-style: none;
+.dashboard .loadingGif {
+    text-align: center;
+}
+.dashboard .subreddits {
     width: 950px;
     margin: auto;
     padding: 50px;
-    overflow: hidden;
     background-color: #f3f3f3;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
     box-shadow: 0 1px 16px rgba(0, 0, 0, 0.1);
     border: 1px solid #d5d5d5;
     border-top-style: none;
+}
+.dashboard ol {
+    overflow: hidden;
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
 }
 .dashboard li {
     float: left;
