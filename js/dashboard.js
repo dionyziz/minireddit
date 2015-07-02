@@ -37,7 +37,7 @@ var Dashboard = {
         // give us a couple of seconds' worth of bandwidth to preload content
         Dashboard.loading( true );
         setTimeout(function() {
-            var subreddits = ['funny', 'pics', 'aww', 'wtf', 'AdviceAnimals', 'fffffffuuuuuuuuuuuu', 'gifs'];
+            var subreddits = ['funny', 'pics', 'aww', 'wtf', 'AdviceAnimals', 'fffffffuuuuuuuuuuuu', 'gifs', 'woahdude'];
 
             for (var i = 0; i < subreddits.length; ++i) {
                 var subreddit = subreddits[i];
