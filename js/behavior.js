@@ -1,4 +1,4 @@
-var subreddit = document.body.id.split('_')[1];
+var subreddit = document.body.id.replace(/^r_/, '');
 var channel = new Reddit.Channel(subreddit);
 
 channel.onnewitemavailable = function(post) {
