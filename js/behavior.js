@@ -15,6 +15,12 @@ function endOfChannel() {
     console.log('End of subreddit.');
     Render.end();
 }
+function channelError() {
+    console.log('Could not load subreddit.');
+    Render.networkError();
+}
+channel.onend = endOfChannel;
+channel.onerror = channelError;
 
 /*
 $('#img').hide();
@@ -32,7 +38,7 @@ function stopMotion() {
 function next() {
     lastMotion = next;
     if (begun) {
-        channel.goNext(endOfChannel);
+        channel.goNext(endOfChannel, channelError);
     }
     else {
         Dashboard.generate();
@@ -98,14 +104,14 @@ Storage.load();
 var args = window.location.href.split('#');
 if (args.length > 1) {
     // link to specific post
-    console.log('Loading post ' + name);
+    console.log('Loading post ' + args[1]);
     Reddit.downloadPost(args[1], function(post) {
         process(post, true);
         if (!begun) {
             Dashboard.generate();
             begun = true;
         }
-    });
+    }, channelError);
 }
 else {
     next();

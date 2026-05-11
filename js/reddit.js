@@ -1,14 +1,31 @@
 var Reddit = {
-    downloadPost: function(name, callback) {
+    MAX_RETRIES: 2,
+    RETRY_DELAY: 500,
+    downloadPost: function(name, callback, onerror) {
         // post factory, download from reddit
         console.log('Loading post ' + name);
-        $.get('post.php', {
-            name: name
-        }, function(postList) {
+        $.ajax({
+            url: 'post.php',
+            data: {
+                name: name
+            },
+            dataType: 'json',
+            timeout: 15000
+        }).done(function(postList) {
+            if (!postList || !postList.data || !$.isArray(postList.data.children) || postList.data.children.length == 0) {
+                if (typeof onerror == 'function') {
+                    onerror();
+                }
+                return;
+            }
             var post = postList.data.children[0].data;
 
             callback(new Reddit.Post(post));
-        }, 'json');
+        }).fail(function() {
+            if (typeof onerror == 'function') {
+                onerror();
+            }
+        });
     },
     Post: function(data) {
         this.name = data.name;
@@ -22,10 +39,13 @@ var Reddit = {
         }
         this.subreddits = subreddits;
         this.items = [];
+        this.itemsDict = {};
+        this.after = '';
         this.currentID = 0;
         this.limit = 25;
 
         this.onnewitemavailable = function() {};
+        this.onend = function() {};
         this.onerror = function() {};
     },
 };
@@ -43,30 +63,57 @@ Reddit.Channel.prototype = {
         }
         // we don't yet have the current item; download it
         this.downloadNextPage(function() {
-            callback(self.items[self.currentID]);
-        }, this.onerror);
+            if (self.items.length > self.currentID) {
+                callback(self.items[self.currentID]);
+            }
+            else {
+                self.onend();
+            }
+        }, this.onend, this.onerror);
     },
-    downloadNextPage: function(ondone, onerror) {
-        var after;
+    downloadNextPage: function(ondone, onend, onerror, retries) {
         var self = this;
+        var after = this.after;
 
-        if (this.items.length == 0) {
-            after = '';
+        if (typeof retries == 'undefined') {
+            retries = Reddit.MAX_RETRIES;
         }
-        else {
-            after = this.items[this.items.length - 1].name;
+
+        function retryOrError() {
+            if (retries > 0) {
+                console.log('Could not load subreddit page. Retrying.');
+                setTimeout(function() {
+                    self.downloadNextPage(ondone, onend, onerror, retries - 1);
+                }, Reddit.RETRY_DELAY);
+                return;
+            }
+            if (typeof onerror == 'function') {
+                onerror();
+            }
         }
-        $.get('feed.php', {
-            r: this.subreddits.join('+'),
-            after: after,
-            limit: this.limit
-        }, function(feed) {
+
+        $.ajax({
+            url: 'feed.php',
+            data: {
+                r: this.subreddits.join('+'),
+                after: after,
+                limit: this.limit
+            },
+            dataType: 'json',
+            timeout: 15000
+        }).done(function(feed) {
             var prevlength = self.items.length;
 
-            if (feed == null) {
+            if (feed && feed.error == 'not_found') {
                 Render.invalid();
                 return;
             }
+            if (!feed || !feed.data || !$.isArray(feed.data.children)) {
+                retryOrError();
+                return;
+            }
+            self.after = feed.data.after || '';
+
             feed.data.children = feed.data.children.map(function(item) {
                 return new Reddit.Post(item.data);
             }).filter(function(item) {
@@ -91,16 +138,31 @@ Reddit.Channel.prototype = {
             }
 
             if (prevlength == newlength) {
+                if (self.after && self.after != after) {
+                    self.downloadNextPage(ondone, onend, onerror, retries);
+                    return;
+                }
                 // we ran out of pages
                 console.log('End of subreddit.');
-                self.onerror();
+                if (typeof onend == 'function') {
+                    onend();
+                }
             }
             else {
                 ondone();
             }
-        }, 'json');
+        }).fail(function(xhr) {
+            if (xhr.status == 404) {
+                Render.invalid();
+                return;
+            }
+            retryOrError();
+        });
     },
-    goNext: function(onerror) {
+    goNext: function(onend, onerror) {
+        if (typeof onend == 'function') {
+            this.onend = onend;
+        }
         if (typeof onerror == 'function') {
             this.onerror = onerror;
         }
