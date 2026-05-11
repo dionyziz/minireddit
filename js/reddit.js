@@ -15,6 +15,10 @@ var Reddit = {
         this.title = data.title;
         this.url = data.url;
         this.permalink = data.permalink;
+        this.preview = data.preview;
+        this.media = data.media;
+        this.secure_media = data.secure_media;
+        this.is_video = data.is_video;
     },
     Channel: function(subreddits) {
         if (typeof subreddits == 'string') {

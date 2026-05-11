@@ -40,7 +40,8 @@
         <div class='content'>
             <h2 class='title'></h2>
             <div class='imgcontainer'>
-                <img src='' id='img' />
+                <img src='' id='img' class='media' />
+                <video src='' id='video' class='media' muted autoplay loop playsinline></video>
             </div>
             <div id='loading'>
                 <div class='text'>
