@@ -69,12 +69,13 @@ a img {
     margin: 5px;
     height: 25px;
 }
-#img.pageflip, #oldimg.pageflip {
+#img.pageflip, #video.pageflip, .oldmedia.pageflip {
     -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
     -webkit-transform-origin: 0 50%;
     -webkit-transform: perspective(1200px) rotateY(0deg);
 }
-#img, #oldimg {
+.media, .oldmedia {
+    display: block;
     cursor: pointer;
     margin: auto;
     max-width: 800px;
@@ -84,6 +85,6 @@ a img {
     position: absolute;
     -webkit-transition: opacity 0.3s;
 }
-#oldimg {
+.oldmedia {
     pointer-events: none;
 }

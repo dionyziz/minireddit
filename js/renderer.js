@@ -8,34 +8,33 @@ var Render = {
     ANIMATION_PERSPECTIVE: 1200,
     lastMotion: 0,
     gone: false,
+    currentURL: false,
+    currentMediaSelector: '#img',
     post: function(post) {
         Render.gone = false;
 
         console.log('render(' + post.title + ')');
 
-        var actualURL = getImage(post.url);
-
-        // this intentionally left unescaped; reddit sends this including HTML entities that must be rendered correctly
-        // we trust reddit to do the escaping correctly
-        $('h2.title').html(post.title);
-        $('#reddit')[0].href = 'http://reddit.com' + post.permalink;
-
-        $('#img').css({
-            opacity: 0,
-            webkitTransform: 'perspective(' + Render.ANIMATION_PERSPECTIVE + 'px) rotateY(-60deg)',
-        }).hide();
-        $('#img')[0].onload = function() {
-            var finalLocation = Math.floor($(window).width() / 2 - $('#img').width() / 2);
+        var media = post.renderedMedia || getMedia(post);
+        if (media === false) {
+            return;
+        }
+        var actualURL = media.url;
+        var $media = media.type == 'video' ? $('#video') : $('#img');
+        var $other = media.type == 'video' ? $('#img') : $('#video');
+        var domMedia = $media[0];
+        var onMediaLoad = function() {
+            var finalLocation = Math.floor($(window).width() / 2 - $media.width() / 2);
 
             Render.stopLoading(true);
-            $('#img').show().css({
+            $media.show().css({
                 left: finalLocation + 'px',
             });
             if (Render.lastMotion == -1) {
-                Render.moveIn($('#img').css({zIndex: 100}).addClass('pageflip'));
+                Render.moveIn($media.css({zIndex: 100}).addClass('pageflip'));
             }
             else {
-                $('#img').removeClass('pageflip').css({
+                $media.removeClass('pageflip').css({
                     zIndex: 1,
                     opacity: 1,
                     webkitTransform: 'perspective(' + Render.ANIMATION_PERSPECTIVE + 'px) rotateY(0deg)'
@@ -44,16 +43,48 @@ var Render = {
             Storage.markAsRead(post);
         };
 
+        // this intentionally left unescaped; reddit sends this including HTML entities that must be rendered correctly
+        // we trust reddit to do the escaping correctly
+        $('h2.title').html(post.title);
+        $('#reddit')[0].href = 'http://reddit.com' + post.permalink;
+
+        Render.currentURL = actualURL;
+        Render.currentMediaSelector = media.type == 'video' ? '#video' : '#img';
+
+        $other.hide().removeClass('current pageflip').attr('src', '');
+        if ($other[0].pause) {
+            $other[0].pause();
+        }
+
+        $media.addClass('current').css({
+            opacity: 0,
+            webkitTransform: 'perspective(' + Render.ANIMATION_PERSPECTIVE + 'px) rotateY(-60deg)',
+        }).hide();
+
         Render.startLoadingTime = (new Date()) | 0;
-        $('#img').attr('src', actualURL);
+        if (media.type == 'video') {
+            domMedia.onloadeddata = onMediaLoad;
+            domMedia.src = actualURL;
+            domMedia.load();
+            if (domMedia.play) {
+                var playResult = domMedia.play();
+                if (playResult && playResult.catch) {
+                    playResult.catch(function() {});
+                }
+            }
+        }
+        else {
+            domMedia.onload = onMediaLoad;
+            $media.attr('src', actualURL);
+        }
     },
     end: function() {
-        $('#img').hide();
+        $('.media').hide();
         $('h2.title').html('<em>This subreddit has no more content.</em>');
         Render.stopLoading();
     },
     invalid: function() {
-        $('#img').hide();
+        $('.media').hide();
         $('h2.title').html('<em>This subreddit does not exist.</em>');
         Render.stopLoading();
     },
@@ -76,22 +107,29 @@ var Render = {
         $('h2.title').html('');
         $(window).scrollTop(0);
 
-        $('#oldimg').remove();
-        $oldimg = $('<img id="oldimg" />')
-        .addClass('pageflip')
-        .attr('src', $('#img').attr('src'))
-        .insertBefore('#img')
-        .css({
-            left: Math.floor($(window).width() / 2 - $('#img').width() / 2) + 'px'
-        });
-        if (Render.lastMotion == 1) {
-            Render.moveOut($oldimg.css({zIndex: 100}));
+        $('.oldmedia').remove();
+        var $current = $(Render.currentMediaSelector);
+        var $oldmedia;
+        if ($current[0].tagName.toLowerCase() == 'video') {
+            $oldmedia = $('<video muted loop autoplay playsinline />').attr('src', $current.attr('src'));
         }
         else {
-            $oldimg.css({zIndex: 1}).css({opacity: 0});
+            $oldmedia = $('<img />').attr('src', $current.attr('src'));
+        }
+        $oldmedia
+        .addClass('oldmedia pageflip')
+        .insertBefore($current)
+        .css({
+            left: Math.floor($(window).width() / 2 - $current.width() / 2) + 'px'
+        });
+        if (Render.lastMotion == 1) {
+            Render.moveOut($oldmedia.css({zIndex: 100}));
+        }
+        else {
+            $oldmedia.css({zIndex: 1}).css({opacity: 0});
         }
 
-        $('#img').hide();
+        $('.media').hide();
 
         Render.startLoading();
     },
@@ -165,7 +203,7 @@ var Render = {
         clearTimeout(Render.loadWaitTimeout);
         Render.loadWaitTimeout = setTimeout(function() {
             $.get('size.php', {
-                url: $('#img').attr('src')
+                url: Render.currentURL
             }, function(size) {
                 Render.loadTotalImageSize = size;
                 updateProgress();
