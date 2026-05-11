@@ -8,6 +8,8 @@
     left: 0;
     right: 0;
     display: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 .dashboard a {
     text-decoration: none;
@@ -116,4 +118,39 @@
 .dashboard div.copy span {
     text-shadow: none;
     vertical-align: top;
+}
+
+@media (max-width: 1100px) {
+    .dashboard .subreddits {
+        width: auto;
+        margin: 0 20px;
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 700px) {
+    .dashboard .subreddits {
+        margin: 0;
+        padding: 16px 8px 40px;
+        border-left-style: none;
+        border-right-style: none;
+        border-radius: 0;
+    }
+    .dashboard ol {
+        text-align: center;
+    }
+    .dashboard li {
+        float: none;
+        display: inline-block;
+        vertical-align: top;
+        margin: 0 0 20px 0;
+    }
+    .dashboard h2 {
+        text-align: center;
+        padding: 0 8px;
+    }
+    .dashboard div.copy {
+        margin: 14px 0;
+        padding-bottom: 16px;
+    }
 }
