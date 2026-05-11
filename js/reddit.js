@@ -24,6 +24,8 @@ var Reddit = {
         this.items = [];
         this.currentID = 0;
         this.limit = 25;
+        this.retryCount = 0;
+        this.maxRetries = 3;
 
         this.onnewitemavailable = function() {};
         this.onerror = function() {};
@@ -56,15 +58,19 @@ Reddit.Channel.prototype = {
         else {
             after = this.items[this.items.length - 1].name;
         }
-        $.get('feed.php', {
-            r: this.subreddits.join('+'),
-            after: after,
-            limit: this.limit
-        }, function(feed) {
+        $.ajax({
+            url: 'feed.php',
+            data: {
+                r: this.subreddits.join('+'),
+                after: after,
+                limit: this.limit
+            },
+            dataType: 'json'
+        }).done(function(feed) {
             var prevlength = self.items.length;
 
-            if (feed == null) {
-                Render.invalid();
+            if (feed == null || typeof feed.data == 'undefined' || typeof feed.data.children == 'undefined') {
+                self.handleTransientFailure(ondone, onerror, true);
                 return;
             }
             feed.data.children = feed.data.children.map(function(item) {
@@ -91,14 +97,40 @@ Reddit.Channel.prototype = {
             }
 
             if (prevlength == newlength) {
-                // we ran out of pages
-                console.log('End of subreddit.');
-                self.onerror();
+                self.handleTransientFailure(ondone, onerror);
             }
             else {
+                self.retryCount = 0;
                 ondone();
             }
-        }, 'json');
+        }).fail(function() {
+            self.handleTransientFailure(ondone, onerror, true);
+        });
+    },
+    handleTransientFailure: function(ondone, onerror, isNetworkFailure) {
+        var self = this;
+
+        if (self.retryCount < self.maxRetries) {
+            self.retryCount += 1;
+            console.log(
+                isNetworkFailure ? 'Feed request failed, retrying.' : 'No new items yet, retrying.'
+            );
+            setTimeout(function() {
+                self.downloadNextPage(ondone, onerror);
+            }, 1000);
+            return;
+        }
+
+        self.retryCount = 0;
+
+        if (isNetworkFailure) {
+            self.currentID = Math.max(0, self.currentID - 1);
+            Render.networkError();
+            return;
+        }
+
+        console.log('End of subreddit.');
+        self.onerror();
     },
     goNext: function(onerror) {
         if (typeof onerror == 'function') {
