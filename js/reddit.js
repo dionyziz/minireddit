@@ -5,10 +5,16 @@ var Reddit = {
         $.get('post.php', {
             name: name
         }, function(postList) {
+            if (postList == null || postList.error) {
+                Render.networkError();
+                return;
+            }
             var post = postList.data.children[0].data;
 
             callback(new Reddit.Post(post));
-        }, 'json');
+        }, 'json').fail(function() {
+            Render.networkError();
+        });
     },
     Post: function(data) {
         this.name = data.name;
@@ -22,11 +28,14 @@ var Reddit = {
         }
         this.subreddits = subreddits;
         this.items = [];
+        this.after = '';
         this.currentID = 0;
         this.limit = 25;
+        this.retryLimit = 2;
 
         this.onnewitemavailable = function() {};
         this.onerror = function() {};
+        this.onend = function() {};
     },
 };
 
@@ -44,29 +53,25 @@ Reddit.Channel.prototype = {
         // we don't yet have the current item; download it
         this.downloadNextPage(function() {
             callback(self.items[self.currentID]);
-        }, this.onerror);
+        }, this.onend, this.onerror);
     },
-    downloadNextPage: function(ondone, onerror) {
-        var after;
+    downloadNextPage: function(ondone, onend, onerror, retries) {
         var self = this;
+        retries = retries || 0;
+        var requestedAfter = this.after;
 
-        if (this.items.length == 0) {
-            after = '';
-        }
-        else {
-            after = this.items[this.items.length - 1].name;
-        }
-        $.get('feed.php', {
+        var request = $.get('feed.php', {
             r: this.subreddits.join('+'),
-            after: after,
+            after: this.after,
             limit: this.limit
         }, function(feed) {
             var prevlength = self.items.length;
 
-            if (feed == null) {
+            if (feed == null || feed.error || !feed.data || !feed.data.children) {
                 Render.invalid();
                 return;
             }
+            self.after = feed.data.after || '';
             feed.data.children = feed.data.children.map(function(item) {
                 return new Reddit.Post(item.data);
             }).filter(function(item) {
@@ -91,18 +96,31 @@ Reddit.Channel.prototype = {
             }
 
             if (prevlength == newlength) {
-                // we ran out of pages
+                if (self.after != '' && self.after != requestedAfter) {
+                    self.downloadNextPage(ondone, onend, onerror, retries);
+                    return;
+                }
                 console.log('End of subreddit.');
-                self.onerror();
+                onend();
             }
             else {
                 ondone();
             }
         }, 'json');
+
+        request.fail(function() {
+            if (retries < self.retryLimit) {
+                console.log('Retrying subreddit feed after transient failure.');
+                self.downloadNextPage(ondone, onend, onerror, retries + 1);
+                return;
+            }
+            console.log('Could not load subreddit feed.');
+            onerror();
+        });
     },
     goNext: function(onerror) {
         if (typeof onerror == 'function') {
-            this.onerror = onerror;
+            this.onend = onerror;
         }
 
         ++this.currentID;

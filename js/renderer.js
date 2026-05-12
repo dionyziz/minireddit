@@ -57,6 +57,11 @@ var Render = {
         $('h2.title').html('<em>This subreddit does not exist.</em>');
         Render.stopLoading();
     },
+    networkError: function() {
+        $('#img').hide();
+        $('h2.title').html('<em>Could not load more content. Please try again.</em>');
+        Render.stopLoading();
+    },
     moveOut: function($img) {
         $img.css({
             webkitTransform: 'perspective(' + Render.ANIMATION_PERSPECTIVE + 'px) rotateY(-60deg)',

@@ -15,6 +15,11 @@ function endOfChannel() {
     console.log('End of subreddit.');
     Render.end();
 }
+function networkError() {
+    console.log('Subreddit feed could not be loaded.');
+    Render.networkError();
+}
+channel.onerror = networkError;
 
 /*
 $('#img').hide();
