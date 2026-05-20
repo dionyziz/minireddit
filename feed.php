@@ -17,6 +17,22 @@
     else {
         $after = '';
     }
-    $url = 'http://www.reddit.com/r/' . $subreddit . '.json?limit=' . $limit . '&after=' . $after;
-    echo file_get_contents( $url );
+    $url = 'https://www.reddit.com/r/' . $subreddit . '.json?limit=' . $limit . '&after=' . $after;
+    $context = stream_context_create( array(
+        'http' => array(
+            'header' => "User-Agent: minireddit/1.0\r\n"
+        )
+    ) );
+    $response = @file_get_contents( $url, false, $context );
+
+    header( 'Content-Type: application/json' );
+    if ( $response === false ) {
+        http_response_code( 502 );
+        echo json_encode( array(
+            'error' => 'Could not fetch reddit feed.'
+        ) );
+        exit;
+    }
+
+    echo $response;
 ?>

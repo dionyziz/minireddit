@@ -11,7 +11,13 @@ channel.onnewitemavailable = function(post) {
 };
 
 // we ran out of pages
-function endOfChannel() {
+function endOfChannel(reason) {
+    if (reason == 'network') {
+        console.log('Network problem while loading subreddit.');
+        Render.networkError();
+        return;
+    }
+
     console.log('End of subreddit.');
     Render.end();
 }
@@ -100,6 +106,10 @@ if (args.length > 1) {
     // link to specific post
     console.log('Loading post ' + name);
     Reddit.downloadPost(args[1], function(post) {
+        if (post === false) {
+            Render.networkError();
+            return;
+        }
         process(post, true);
         if (!begun) {
             Dashboard.generate();

@@ -2,13 +2,22 @@ var Reddit = {
     downloadPost: function(name, callback) {
         // post factory, download from reddit
         console.log('Loading post ' + name);
-        $.get('post.php', {
-            name: name
-        }, function(postList) {
+        $.ajax({
+            url: 'post.php',
+            data: {
+                name: name
+            },
+            dataType: 'json'
+        }).done(function(postList) {
+            if (!postList || !postList.data || !postList.data.children.length) {
+                return callback(false);
+            }
             var post = postList.data.children[0].data;
 
             callback(new Reddit.Post(post));
-        }, 'json');
+        }).fail(function() {
+            callback(false);
+        });
     },
     Post: function(data) {
         this.name = data.name;
@@ -56,15 +65,19 @@ Reddit.Channel.prototype = {
         else {
             after = this.items[this.items.length - 1].name;
         }
-        $.get('feed.php', {
-            r: this.subreddits.join('+'),
-            after: after,
-            limit: this.limit
-        }, function(feed) {
+        $.ajax({
+            url: 'feed.php',
+            data: {
+                r: this.subreddits.join('+'),
+                after: after,
+                limit: this.limit
+            },
+            dataType: 'json'
+        }).done(function(feed) {
             var prevlength = self.items.length;
 
-            if (feed == null) {
-                Render.invalid();
+            if (!feed || !feed.data || !feed.data.children) {
+                onerror('network');
                 return;
             }
             feed.data.children = feed.data.children.map(function(item) {
@@ -93,12 +106,15 @@ Reddit.Channel.prototype = {
             if (prevlength == newlength) {
                 // we ran out of pages
                 console.log('End of subreddit.');
-                self.onerror();
+                self.onerror('end');
             }
             else {
                 ondone();
             }
-        }, 'json');
+        }).fail(function() {
+            console.log('Could not load subreddit feed.');
+            self.onerror('network');
+        });
     },
     goNext: function(onerror) {
         if (typeof onerror == 'function') {
