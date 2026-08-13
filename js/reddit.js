@@ -8,7 +8,10 @@ var Reddit = {
             var post = postList.data.children[0].data;
 
             callback(new Reddit.Post(post));
-        }, 'json');
+        }, 'json').fail(function(jqXHR, textStatus, errorThrown) {
+            console.log('Network error: ' + textStatus);
+            self.onerror();
+        });
     },
     Post: function(data) {
         this.name = data.name;
@@ -63,8 +66,9 @@ Reddit.Channel.prototype = {
         }, function(feed) {
             var prevlength = self.items.length;
 
-            if (feed == null) {
-                Render.invalid();
+            if (feed == null || !feed.data || !feed.data.children) {
+                console.log('Invalid response from Reddit API');
+                self.onerror();
                 return;
             }
             feed.data.children = feed.data.children.map(function(item) {
@@ -98,7 +102,10 @@ Reddit.Channel.prototype = {
             else {
                 ondone();
             }
-        }, 'json');
+        }, 'json').fail(function(jqXHR, textStatus, errorThrown) {
+            console.log('Network error: ' + textStatus);
+            self.onerror();
+        });
     },
     goNext: function(onerror) {
         if (typeof onerror == 'function') {
