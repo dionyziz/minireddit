@@ -67,6 +67,14 @@ $('#settings').click(function(e) {
 
 $('#img').click(next);
 
+$(window).on('resize', function() {
+    var viewportWidth = $(window).width();
+    $('#img, #oldimg').each(function() {
+        var $image = $(this);
+        $image.css('left', Math.floor(viewportWidth / 2 - $image.width() / 2) + 'px');
+    });
+});
+
 if (localStorage.instructions == 'read') {
     $('.instructions').hide();
 }

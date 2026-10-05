@@ -78,6 +78,7 @@ a img {
     cursor: pointer;
     margin: auto;
     max-width: 800px;
+    height: auto;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 3px;
     box-shadow: 0 1px 16px rgba(0, 0, 0, 0.1);
@@ -86,4 +87,25 @@ a img {
 }
 #oldimg {
     pointer-events: none;
+}
+
+@media (max-width: 700px) {
+    body {
+        overflow-x: hidden;
+    }
+    h2.title {
+        font-size: 15pt;
+        line-height: 24px;
+        min-height: 24px;
+        padding: 10px 12px;
+    }
+    #loading {
+        left: 5%;
+        width: 90%;
+        margin-left: 0;
+    }
+    #img, #oldimg {
+        max-width: 95%;
+        max-width: calc(100vw - 20px);
+    }
 }

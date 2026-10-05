@@ -115,3 +115,24 @@
 #reddit:hover .head {
     left: 21px;
 }
+
+@media (max-width: 700px) {
+    .instructions {
+        font-size: 13px;
+        line-height: 20px;
+        padding: 7px 78px 7px 8px;
+        text-align: left;
+    }
+    .instructions span {
+        padding: 2px 5px;
+    }
+    .info {
+        z-index: 4;
+        padding: 6px 10px;
+    }
+    .info a {
+        width: 24px;
+        height: 24px;
+        padding: 7px 0 7px 10px;
+    }
+}
